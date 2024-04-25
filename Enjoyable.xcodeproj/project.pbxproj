@@ -553,6 +553,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.yukkurigames.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = Enjoyable;
 				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Debug;
 		};
@@ -582,6 +583,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.yukkurigames.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = Enjoyable;
 				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Release;
 		};

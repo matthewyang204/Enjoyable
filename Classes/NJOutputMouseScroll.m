@@ -34,9 +34,10 @@
 }
 
 - (int)wheel:(int)n {
-    int amount =  abs(_direction) == n ? _direction / n : 0;
-    if (self.smooth)
-        amount *= _speed * self.magnitude;
+    int amount = abs(_direction) == n ? _direction / n : 0;
+    if (self.smooth) {
+        amount = (int)(amount * self.speed * self.magnitude);
+    }
     return amount;
 }
 
