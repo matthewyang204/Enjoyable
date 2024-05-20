@@ -17,8 +17,9 @@
 - (id)init {
     if ((self = [super init])) {
         NSArray *expanded = [NSUserDefaults.standardUserDefaults objectForKey:@"expanded rows"];
-        if (![expanded isKindOfClass:NSArray.class])
-            expanded = @[];
+        if (![expanded isKindOfClass:[NSArray class]]) {
+            expanded = [NSArray array];
+        }
         _expanded = [[NSMutableArray alloc] initWithCapacity:MAX(16, _expanded.count)];
         [_expanded addObjectsFromArray:expanded];
     }

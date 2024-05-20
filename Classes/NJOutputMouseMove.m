@@ -58,16 +58,13 @@ static CGFloat pointRectSquaredDistance(NSPoint p, NSRect r) {
 
 - (NSScreen*)nearestScreenTo:(NSPoint)mouseLoc {
     NSScreen *nearestScreen = nil;
-    if (NSScreen.screens.count == 0) {
-        nearestScreen = NSScreen.screens[0];
-    } else {
-        CGFloat minDistance = 0;
-        for (NSScreen *screen in NSScreen.screens) {
-            CGFloat d = pointRectSquaredDistance(mouseLoc, screen.frame);
-            if (minDistance == 0 || d < minDistance) {
-                minDistance = d;
-                nearestScreen = screen;
-            }
+    NSArray *screens = NSScreen.screens;
+    CGFloat minDistance = 0;
+    for (NSScreen *screen in screens) {
+        CGFloat d = pointRectSquaredDistance(mouseLoc, screen.frame);
+        if (minDistance == 0 || d < minDistance) {
+            minDistance = d;
+            nearestScreen = screen;
         }
     }
     return nearestScreen;
@@ -161,7 +158,7 @@ static CGFloat pointRectSquaredDistance(NSPoint p, NSRect r) {
     }
     ic.mouseLoc = mouseLoc;
 
-    CGFloat height = ((NSScreen*)NSScreen.screens[0]).frame.size.height;
+    CGFloat height = ((NSScreen *)[NSScreen.screens firstObject]).frame.size.height;
     CGEventRef move = CGEventCreateMouseEvent(NULL, kCGEventMouseMoved,
                                               CGPointMake(mouseLoc.x, height - mouseLoc.y),
                                               0);

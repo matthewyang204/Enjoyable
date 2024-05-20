@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="22505" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22505"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -126,21 +126,22 @@
                     </menu>
                 </menuItem>
             </items>
+            <point key="canvasLocation" x="87" y="149"/>
         </menu>
-        <window title="Enjoyable" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Enjoyable" animationBehavior="default" id="450">
+        <window title="Enjoyable" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Enjoyable" animationBehavior="default" id="450">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="355" y="59" width="664" height="323"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
             <value key="minSize" type="size" width="664" height="323"/>
             <view key="contentView" id="453">
                 <rect key="frame" x="0.0" y="0.0" width="664" height="323"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <customView id="916">
+                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="916">
                         <rect key="frame" x="0.0" y="0.0" width="234" height="323"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView autohidesScrollers="YES" horizontalLineScroll="26" horizontalPageScroll="10" verticalLineScroll="26" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" id="634">
+                            <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="26" horizontalPageScroll="10" verticalLineScroll="26" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="634">
                                 <rect key="frame" x="0.0" y="0.0" width="234" height="323"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <clipView key="contentView" id="sFY-hh-GJt">
@@ -149,14 +150,13 @@
                                     <subviews>
                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="24" rowSizeStyle="systemDefault" indentationPerLevel="16" outlineTableColumn="639" id="637" userLabel="Input Device List">
                                             <rect key="frame" x="0.0" y="0.0" width="232" height="321"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
-                                                <tableColumn editable="NO" width="229" minWidth="16" maxWidth="1000" id="639" userLabel="Device/Input Name">
+                                                <tableColumn editable="NO" width="220" minWidth="16" maxWidth="1000" id="639" userLabel="Device/Input Name">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
-                                                        <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" white="0.33333299" alpha="1" colorSpace="calibratedWhite"/>
                                                     </tableHeaderCell>
@@ -184,7 +184,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <button id="913">
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="913">
                                 <rect key="frame" x="20" y="20" width="194" height="283"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" enabled="NO" imageScaling="proportionallyDown" inset="2" id="914">
@@ -195,7 +195,7 @@ Connect a device to begin mapping.</string>
                                     <font key="font" metaFont="systemBold" size="14"/>
                                 </buttonCell>
                             </button>
-                            <button hidden="YES" id="974">
+                            <button hidden="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="974">
                                 <rect key="frame" x="20" y="20" width="194" height="283"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" enabled="NO" imageScaling="proportionallyDown" inset="2" id="975">
@@ -208,15 +208,15 @@ Switch back to re-enable input.</string>
                             </button>
                         </subviews>
                     </customView>
-                    <customView id="917">
+                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="917">
                         <rect key="frame" x="233" y="0.0" width="431" height="323"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
                         <subviews>
-                            <box verticalHuggingPriority="750" boxType="separator" id="708">
+                            <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="708">
                                 <rect key="frame" x="12" y="276" width="406" height="5"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             </box>
-                            <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="706" userLabel="Input Name">
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="706" userLabel="Input Name">
                                 <rect key="frame" x="9" y="286" width="412" height="17"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="center" placeholderString="No input selected" usesSingleLineMode="YES" id="707">
@@ -225,7 +225,7 @@ Switch back to re-enable input.</string>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <matrix verticalHuggingPriority="750" selectionByRect="NO" id="656" userLabel="Output Types">
+                            <matrix verticalHuggingPriority="750" fixedFrame="YES" selectionByRect="NO" translatesAutoresizingMaskIntoConstraints="NO" id="656" userLabel="Output Types">
                                 <rect key="frame" x="24" y="20" width="163" height="250"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -267,7 +267,7 @@ Switch back to re-enable input.</string>
                                     <action selector="outputTypeChanged:" target="686" id="1041"/>
                                 </connections>
                             </matrix>
-                            <popUpButton verticalHuggingPriority="750" id="700" userLabel="Mapping Choice List">
+                            <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="700" userLabel="Mapping Choice List">
                                 <rect key="frame" x="188" y="153" width="226" height="26"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                 <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="701">
@@ -276,14 +276,14 @@ Switch back to re-enable input.</string>
                                     <menu key="menu" title="OtherViews" id="702"/>
                                 </popUpButtonCell>
                             </popUpButton>
-                            <customView id="778" customClass="NJKeyInputField">
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="778" customClass="NJKeyInputField">
                                 <rect key="frame" x="191" y="196" width="220" height="23"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <outlet property="delegate" destination="686" id="966"/>
                                 </connections>
                             </customView>
-                            <slider toolTip="Maximum mouse speed" verticalHuggingPriority="750" misplaced="YES" id="883">
+                            <slider toolTip="Maximum mouse speed" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="883">
                                 <rect key="frame" x="191" y="108" width="146" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" controlSize="mini" alignment="left" minValue="1" maxValue="20" doubleValue="10" tickMarkPosition="above" numberOfTickMarks="20" allowsTickMarkValuesOnly="YES" sliderType="linear" id="884"/>
@@ -291,7 +291,7 @@ Switch back to re-enable input.</string>
                                     <action selector="mouseSpeedChanged:" target="686" id="885"/>
                                 </connections>
                             </slider>
-                            <segmentedControl verticalHuggingPriority="750" id="744" userLabel="Mouse Button Selector">
+                            <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="744" userLabel="Mouse Button Selector">
                                 <rect key="frame" x="189" y="70" width="224" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                 <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="745">
@@ -308,7 +308,7 @@ Switch back to re-enable input.</string>
                                     <action selector="mouseButtonChanged:" target="686" id="1039"/>
                                 </connections>
                             </segmentedControl>
-                            <slider toolTip="Mouse scroll speed" verticalHuggingPriority="750" id="887">
+                            <slider toolTip="Mouse scroll speed" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="887">
                                 <rect key="frame" x="191" y="24" width="146" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" controlSize="mini" state="on" alignment="left" minValue="1" maxValue="29" doubleValue="15" tickMarkPosition="above" numberOfTickMarks="15" allowsTickMarkValuesOnly="YES" sliderType="linear" id="888"/>
@@ -316,7 +316,7 @@ Switch back to re-enable input.</string>
                                     <action selector="scrollSpeedChanged:" target="686" id="890"/>
                                 </connections>
                             </slider>
-                            <segmentedControl verticalHuggingPriority="750" id="749" userLabel="Mouse Scroll Selector">
+                            <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="749" userLabel="Mouse Scroll Selector">
                                 <rect key="frame" x="189" y="33" width="150" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                 <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="750">
@@ -332,7 +332,7 @@ Switch back to re-enable input.</string>
                                     <action selector="scrollDirectionChanged:" target="686" id="1038"/>
                                 </connections>
                             </segmentedControl>
-                            <button id="946">
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="946">
                                 <rect key="frame" x="343" y="31" width="70" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Smooth" bezelStyle="regularSquare" imagePosition="left" inset="2" id="947">
@@ -343,7 +343,7 @@ Switch back to re-enable input.</string>
                                     <action selector="scrollTypeChanged:" target="686" id="948"/>
                                 </connections>
                             </button>
-                            <segmentedControl verticalHuggingPriority="750" id="754" userLabel="Mouse Motion Selector">
+                            <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="754" userLabel="Mouse Motion Selector">
                                 <rect key="frame" x="189" y="117" width="150" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                 <segmentedCell key="cell" controlSize="small" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="755">
@@ -359,7 +359,7 @@ Switch back to re-enable input.</string>
                                     <action selector="mouseDirectionChanged:" target="686" id="1040"/>
                                 </connections>
                             </segmentedControl>
-                            <button id="1020">
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1020">
                                 <rect key="frame" x="197" y="157" width="193" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="Unknown Mapping" bezelStyle="rounded" alignment="left" enabled="NO" refusesFirstResponder="YES" imageScaling="proportionallyDown" inset="2" id="1021">
@@ -367,7 +367,7 @@ Switch back to re-enable input.</string>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
-                            <button misplaced="YES" id="0xe-u6-gzf">
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0xe-u6-gzf">
                                 <rect key="frame" x="343" y="117" width="78" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Centered" bezelStyle="regularSquare" imagePosition="left" inset="2" id="wYf-qJ-FLn">
@@ -384,7 +384,7 @@ Switch back to re-enable input.</string>
             </view>
             <toolbar key="toolbar" implicitIdentifier="AC1F5C48-4C16-4C9D-9779-B783AF35E2E1" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="487">
                 <allowedToolbarItems>
-                    <toolbarItem implicitItemIdentifier="4AC66688-76E8-47ED-AC0A-7462220A4019" label="Mapping Selector" paletteLabel="Mapping Selector" image="NSListViewTemplate" autovalidates="NO" id="837" userLabel="Mapping Selector">
+                    <toolbarItem implicitItemIdentifier="4AC66688-76E8-47ED-AC0A-7462220A4019" label="Mapping Selector" paletteLabel="Mapping Selector" image="NSListViewTemplate" title="(default)" autovalidates="NO" id="837" userLabel="Mapping Selector">
                         <nil key="toolTip"/>
                         <size key="minSize" width="13" height="25"/>
                         <size key="maxSize" width="141" height="25"/>
@@ -452,6 +452,7 @@ Switch back to re-enable input.</string>
                     </connections>
                 </menuItem>
             </items>
+            <point key="canvasLocation" x="5" y="-185"/>
         </menu>
         <menu id="923" userLabel="Dock Menu">
             <items>
@@ -463,6 +464,7 @@ Switch back to re-enable input.</string>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="924"/>
             </items>
+            <point key="canvasLocation" x="-130" y="-322"/>
         </menu>
         <customObject id="482" customClass="EnjoyableApplicationDelegate">
             <connections>
@@ -528,7 +530,7 @@ Switch back to re-enable input.</string>
             <rect key="frame" x="0.0" y="0.0" width="200" height="220"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <button toolTip="Remove the selected mapping" verticalHuggingPriority="750" id="511" userLabel="Remove Mapping">
+                <button toolTip="Remove the selected mapping" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="511" userLabel="Remove Mapping">
                     <rect key="frame" x="33" y="-1" width="34" height="23"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" controlSize="mini" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="512">
@@ -543,7 +545,7 @@ CA
                         <action selector="removeClicked:" target="993" id="1005"/>
                     </connections>
                 </button>
-                <button toolTip="Move the selected mapping up the list" verticalHuggingPriority="750" id="893" userLabel="Move Mapping Up">
+                <button toolTip="Move the selected mapping up the list" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="893" userLabel="Move Mapping Up">
                     <rect key="frame" x="133" y="-1" width="34" height="23"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <buttonCell key="cell" type="smallSquare" title="⬆" bezelStyle="smallSquare" imagePosition="overlaps" alignment="center" controlSize="mini" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="894">
@@ -556,7 +558,7 @@ CA
                         <action selector="moveUpClicked:" target="993" id="1009"/>
                     </connections>
                 </button>
-                <button toolTip="Move the selected mapping down the list" verticalHuggingPriority="750" id="896" userLabel="Move Mapping Down">
+                <button toolTip="Move the selected mapping down the list" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="896" userLabel="Move Mapping Down">
                     <rect key="frame" x="166" y="-1" width="34" height="23"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <buttonCell key="cell" type="smallSquare" title="⬇" bezelStyle="smallSquare" imagePosition="overlaps" alignment="center" controlSize="mini" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="897">
@@ -569,7 +571,7 @@ CA
                         <action selector="moveDownClicked:" target="993" id="1008"/>
                     </connections>
                 </button>
-                <button toolTip="Create a new mapping" verticalHuggingPriority="750" id="507" userLabel="Add Mapping">
+                <button toolTip="Create a new mapping" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="507" userLabel="Add Mapping">
                     <rect key="frame" x="0.0" y="-1" width="34" height="23"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="only" alignment="center" controlSize="mini" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="508">
@@ -582,7 +584,7 @@ CA
                         <action selector="addClicked:" target="993" id="1007"/>
                     </connections>
                 </button>
-                <button verticalHuggingPriority="750" id="862" userLabel="Gradient Space">
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="862" userLabel="Gradient Space">
                     <rect key="frame" x="66" y="-1" width="68" height="23"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" imagePosition="overlaps" alignment="center" controlSize="mini" refusesFirstResponder="YES" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="863">
@@ -590,23 +592,22 @@ CA
                         <font key="font" metaFont="miniSystem"/>
                     </buttonCell>
                 </button>
-                <scrollView autohidesScrollers="YES" horizontalLineScroll="26" horizontalPageScroll="10" verticalLineScroll="26" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" id="456">
+                <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="26" horizontalPageScroll="10" verticalLineScroll="26" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="456">
                     <rect key="frame" x="0.0" y="20" width="200" height="200"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <clipView key="contentView" id="NaR-c6-L0m">
                         <rect key="frame" x="1" y="1" width="198" height="198"/>
-                        <autoresizingMask key="autoresizingMask"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="24" rowSizeStyle="systemDefault" id="459" userLabel="Mapping List">
-                                <rect key="frame" x="0.0" y="0.0" width="198" height="198"/>
-                                <autoresizingMask key="autoresizingMask"/>
+                                <rect key="frame" x="0.0" y="0.0" width="202" height="198"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <tableColumns>
                                     <tableColumn width="190" minWidth="190" maxWidth="190" id="461">
                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
-                                            <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="0.33333299" alpha="1" colorSpace="calibratedWhite"/>
                                         </tableHeaderCell>
@@ -634,6 +635,7 @@ CA
                     </scroller>
                 </scrollView>
             </subviews>
+            <point key="canvasLocation" x="-130" y="-521"/>
         </customView>
         <customObject id="950" userLabel="Main Mappings Menu Controller" customClass="NJMappingMenuController">
             <userDefinedRuntimeAttributes>
@@ -676,9 +678,9 @@ CA
         </customObject>
     </objects>
     <resources>
-        <image name="NSAddTemplate" width="11" height="11"/>
-        <image name="NSListViewTemplate" width="14" height="10"/>
-        <image name="NSRemoveTemplate" width="11" height="11"/>
-        <image name="NSRightFacingTriangleTemplate" width="9" height="12"/>
+        <image name="NSAddTemplate" width="18" height="16"/>
+        <image name="NSListViewTemplate" width="21" height="14"/>
+        <image name="NSRemoveTemplate" width="18" height="4"/>
+        <image name="NSRightFacingTriangleTemplate" width="12" height="16"/>
     </resources>
 </document>
