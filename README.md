@@ -57,5 +57,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 The joystick icon is from the Tango icon set and is public domain.
 
-Credits:
+# Blocked execution
+If your Mac says something like "Unidentified developer" in a pop-up when you try to open the app, try running this in a terminal under an administrator account:
+```
+sudo spctl --master-disable
+```
+
+# Credits
 - [erpapa's Enjoyable 1.3](https://github.com/erpapa/Enjoyable-1.3): I used a few of his fixes to get the main Enjoyable 1.3 to work properly because I could not figure out some problems in it.

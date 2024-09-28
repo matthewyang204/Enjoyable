@@ -7,7 +7,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 
 # This program built for i386-apple-darwin11.3.0
 
-# Make data base, printed on Sat Sep 28 07:26:23 2024
+# Make data base, printed on Sat Sep 28 11:47:49 2024
 
 # Variables
 
@@ -123,6 +123,8 @@ XPC_SERVICE_NAME = application.com.microsoft.VSCode.109318664.111121342
 HOMEBREW_PREFIX = /opt/homebrew
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
+# environment
+VSCODE_L10N_BUNDLE_LOCATION = 
 # automatic
 +F = $(notdir $+)
 # environment
@@ -150,9 +152,9 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 52163
+VSCODE_PID = 99434
 # variable set hash-table stats:
-# Load=70/1024=7%, Rehash=0, Collisions=1/91=1%
+# Load=71/1024=7%, Rehash=0, Collisions=1/92=1%
 
 # Pattern-specific Variable Values
 
@@ -234,7 +236,7 @@ GNUmakefile:
 # strcache size: total = 0 / max = 0 / min = 4096 / avg = 0
 # strcache free: total = 0 / max = 0 / min = 4096 / avg = 0
 
-# Finished Make data base on Sat Sep 28 07:26:23 2024
+# Finished Make data base on Sat Sep 28 11:47:49 2024
 
  
 make: *** No rule to make target `all'.  Stop.
