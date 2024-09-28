@@ -7,12 +7,10 @@
 //
 
 #import "NSRunningApplication+LoginItem.h"
-
 #import <CoreServices/CoreServices.h>
-
 #import <ServiceManagement/ServiceManagement.h>
-
 #import <Cocoa/Cocoa.h>
+#include <libproc.h> // For proc_pidinfo
 
 static const UInt32 RESOLVE_FLAGS = kLSSharedFileListNoUserInteraction | kLSSharedFileListDoNotMountVolumes;
 
@@ -56,29 +54,26 @@ static const UInt32 RESOLVE_FLAGS = kLSSharedFileListNoUserInteraction | kLSShar
 }
 
 - (BOOL)wasLaunchedAsLoginItemOrResume {
-    // Get the current process's information
-    ProcessSerialNumber psn = {0, kCurrentProcess};
-    NSDictionary *processInfo = CFBridgingRelease(ProcessInformationCopyDictionary(&psn, kProcessDictionaryIncludeAllInformationMask));
+    // Get the current process's identifier
+    pid_t currentProcessID = [[NSProcessInfo processInfo] processIdentifier];
 
-    // Handle error if processInfo couldn't be obtained
-    if (!processInfo) {
-        return NO;
-    }
+    // Allocate space for process info
+    struct proc_bsdinfo procInfo;
+    memset(&procInfo, 0, sizeof(procInfo)); // Zero out the structure
 
-    long long parent = [processInfo[@"ParentPSN"] longLongValue];
-    ProcessSerialNumber parentPsn = {
-        (parent >> 32) & 0xFFFFFFFF,
-        parent & 0xFFFFFFFF
-    };
+    // Get the process information
+    if (proc_pidinfo(currentProcessID, PROC_PIDLISTFDS, 0, &procInfo, sizeof(procInfo)) > 0) {
+        pid_t parentProcessID = procInfo.pbi_ppid; // Get the parent process ID
 
-    // Use NSWorkspace to get the parent process information
-    NSRunningApplication *parentApp = [NSRunningApplication runningApplicationWithProcessIdentifier:parentPsn.highLongOfPSN];
+        // Get the parent application
+        NSRunningApplication *parentApp = [NSRunningApplication runningApplicationWithProcessIdentifier:parentProcessID];
 
-    // Check if parentApp is valid
-    if (parentApp) {
-        // Access the bundle identifier instead of file creator
-        NSString *parentBundleIdentifier = parentApp.bundleIdentifier;
-        return [parentBundleIdentifier isEqualToString:@"your.bundle.identifier"]; // Replace with your app's bundle identifier
+        // Check if the parent application is valid
+        if (parentApp) {
+            // Check the bundle identifier of the parent application
+            NSString *parentBundleIdentifier = parentApp.bundleIdentifier;
+            return [parentBundleIdentifier isEqualToString:@"your.bundle.identifier"]; // Replace with your app's bundle identifier
+        }
     }
 
     return NO; // Handle case where parent app could not be found
