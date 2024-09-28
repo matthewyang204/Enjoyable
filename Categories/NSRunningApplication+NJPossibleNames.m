@@ -11,39 +11,34 @@
 @implementation NSRunningApplication (NJPossibleNames)
 
 - (NSArray *)windowTitles {
-    static CGWindowListOption s_options = (CGWindowListOption)(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements);
-    NSMutableArray *titles = [NSMutableArray array];
-    NSArray *windows = CFBridgingRelease(CGWindowListCopyWindowInfo(s_options, kCGNullWindowID));
+    static CGWindowListOption s_OPTIONS = (CGWindowListOption)(kCGWindowListOptionOnScreenOnly
+                                           | kCGWindowListExcludeDesktopElements);
+    NSMutableArray *titles = [[NSMutableArray alloc] initWithCapacity:4];
+    NSArray *windows = CFBridgingRelease(CGWindowListCopyWindowInfo(s_OPTIONS, kCGNullWindowID));
     for (NSDictionary *props in windows) {
         NSNumber *pid = props[(id)kCGWindowOwnerPID];
-        if (pid.longValue == self.processIdentifier && props[(id)kCGWindowName]) {
+        if (pid.longValue == self.processIdentifier && props[(id)kCGWindowName])
             [titles addObject:props[(id)kCGWindowName]];
-        }
     }
     return titles;
 }
 
 - (NSString *)frontWindowTitle {
-    return [self.windowTitles firstObject];
+    return self.windowTitles[0];
 }
 
 - (NSArray *)possibleMappingNames {
-    NSMutableArray *names = [NSMutableArray array];
-    if (self.bundleIdentifier) {
+    NSMutableArray *names = [[NSMutableArray alloc] initWithCapacity:4];
+    if (self.bundleIdentifier)
         [names addObject:self.bundleIdentifier];
-    }
-    if (self.localizedName) {
+    if (self.localizedName)
         [names addObject:self.localizedName];
-    }
-    if (self.bundleURL) {
+    if (self.bundleURL)
         [names addObject:[self.bundleURL.lastPathComponent stringByDeletingPathExtension]];
-    }
-    if (self.executableURL) {
+    if (self.executableURL)
         [names addObject:self.executableURL.lastPathComponent];
-    }
-    if (self.frontWindowTitle) {
+    if (self.frontWindowTitle)
         [names addObject:self.frontWindowTitle];
-    }
     return names;
 }
 

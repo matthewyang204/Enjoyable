@@ -49,12 +49,7 @@ static NSArray *InputsForElement(IOHIDDeviceRef device, id parent) {
             input = [[NJInputAnalog alloc] initWithElement:element
                                                      index:++axes
                                                     parent:parent];
-        } else if (usage >= kHIDUsage_GD_DPadUp && usage <= kHIDUsage_GD_DPadLeft) {
-            input = [[NJInputButton alloc] initWithElement:element
-                                                     index:++buttons
-                                                    parent:parent];
         } else {
-            NSLog(@"un-handled input %d", usage);
             continue;
         }
         

@@ -38,8 +38,7 @@ static const UInt32 RESOLVE_FLAGS = kLSSharedFileListNoUserInteraction
 }
 
 - (void)addToLoginItems {
-    BOOL isLogin = [self isLoginItem];
-    if (!isLogin) {
+    if (!self.isLoginItem) {
         NSURL *myURL = self.bundleURL;
         LSSharedFileListRef loginItems = LSSharedFileListCreate(
             NULL, kLSSharedFileListSessionLoginItems, NULL);
