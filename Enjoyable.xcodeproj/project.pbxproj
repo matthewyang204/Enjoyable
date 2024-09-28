@@ -73,7 +73,7 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* Enjoyable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Enjoyable.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* Enjoyable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Enjoyable.app; path = "/Users/matthewyang/enjoyable-apple-silicon/build/Debug/Enjoyable.app"; sourceTree = "<absolute>"; };
 		D594BEFF0FAE7397007A85F2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		EE1F3CE916EF4182008C6426 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EE35A6E317BBCC9500413995 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
@@ -199,14 +199,6 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		19C28FACFE9D520D11CA2CBB /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				8D1107320486CEB800E47090 /* Enjoyable.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		29B97314FDCFA39411CA2CEA /* Enjoy */ = {
 			isa = PBXGroup;
 			children = (
@@ -217,7 +209,6 @@
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
-				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
 			name = Enjoy;
 			sourceTree = "<group>";
@@ -384,6 +375,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0820;
+				TargetAttributes = {
+					8D1107260486CEB800E47090 = {
+						DevelopmentTeam = 2F5T923P7F;
+						ProvisioningStyle = Automatic;
+					};
+				};
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Enjoyable" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -532,9 +529,12 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 2F5T923P7F;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -553,6 +553,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matthewyang.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = Enjoyable;
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Debug;
@@ -564,9 +565,12 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 2F5T923P7F;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -583,6 +587,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.matthewyang.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = Enjoyable;
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Release;
