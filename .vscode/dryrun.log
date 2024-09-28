@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/matthewyang/enjoyable-apple-silicon'
+make: Leaving directory `/Users/matthewyang/enjoyable-apple-silicon'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+
