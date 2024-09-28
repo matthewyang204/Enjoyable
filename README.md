@@ -18,19 +18,6 @@ Enjoyable is free software written by Joe Wreschnig with minor additions
 by Sam Deane, and is based on the Enjoy codebase written by [Yifeng Huang](http://nongraphical.com)
 and [Sam McCall](http://abstractable.net/enjoy/).
 
-### New in 1.3
-
-Added in 1.3 is support for a "centered" mode for mouse move.
-
-In this mode, rather than nudging the mouse position left/right/up/down, tan analog input can be
-used to set the absolute location of the mouse as a deviation from the centre of the screen. The further
-the analog input is from the neutral point, the further away from the centre of the screen the mouse
-gets placed. 
-
-This is intended to be a better solution for games such as Elite: Dangerous which can map the mouse
-to yaw/roll/pitch, and where it's valuable to be able to have the mouse snap back to a central point
-when the input is released.
-
 ## How to Use
 
 To start, just press a button on your joystick or gamepad, then press
@@ -69,3 +56,6 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 The joystick icon is from the Tango icon set and is public domain.
+
+Credits:
+[erpapa's Enjoyable 1.3](https://github.com/erpapa/Enjoyable-1.3): I used a few of his fixes to get the main Enjoyable 1.3 to work properly because I could not figure out some problems in it.
