@@ -7,75 +7,84 @@
 //
 
 #import "NSRunningApplication+LoginItem.h"
-#import <CoreServices/CoreServices.h>
-#import <ServiceManagement/ServiceManagement.h>
-#import <Cocoa/Cocoa.h>
-#include <libproc.h> // For proc_pidinfo
 
-//static const UInt32 RESOLVE_FLAGS = kLSSharedFileListNoUserInteraction | kLSSharedFileListDoNotMountVolumes;
+#import <CoreServices/CoreServices.h>
+
+static const UInt32 RESOLVE_FLAGS = kLSSharedFileListNoUserInteraction
+                                  | kLSSharedFileListDoNotMountVolumes;
 
 @implementation NSRunningApplication (LoginItem)
 
 - (BOOL)isLoginItem {
-    NSString *myBundleIdentifier = self.bundleIdentifier; // Assuming you have a property for the bundle identifier
-
-    // Check if the login item is enabled
-    BOOL isEnabled = SMLoginItemSetEnabled((__bridge CFStringRef)myBundleIdentifier, true);
-    
-    // Check for any other logic if needed, currently just returning the status
-    return isEnabled;
+    LSSharedFileListRef loginItems = LSSharedFileListCreate(
+        NULL, kLSSharedFileListSessionLoginItems, NULL);
+    NSURL *myURL = self.bundleURL;
+	BOOL found = NO;
+    UInt32 seed = 0;
+    NSArray *currentLoginItems = CFBridgingRelease(
+        LSSharedFileListCopySnapshot(loginItems, &seed));
+    for (id obj in currentLoginItems) {
+        LSSharedFileListItemRef item = (__bridge LSSharedFileListItemRef)obj;
+        CFURLRef itemURL = NULL;
+        if (!LSSharedFileListItemResolve(item, RESOLVE_FLAGS, &itemURL, NULL)) {
+            found = CFEqual(itemURL, (__bridge CFURLRef)myURL);
+            CFRelease(itemURL);
+        }
+        if (found)
+            break;
+    }
+    CFRelease(loginItems);
+	return found;
 }
 
 - (void)addToLoginItems {
-    if (!self.isLoginItem) {
-        // Get the bundle identifier
-        NSString *myBundleIdentifier = self.bundleIdentifier; // Assuming this returns the correct bundle identifier
-
-        // Enable the login item
-        BOOL success = SMLoginItemSetEnabled((__bridge CFStringRef)myBundleIdentifier, true);
-        if (success) {
-            NSLog(@"Successfully added to login items.");
-        } else {
-            NSLog(@"Failed to add to login items.");
-        }
+    BOOL isLogin = [self isLoginItem];
+    if (!isLogin) {
+        NSURL *myURL = self.bundleURL;
+        LSSharedFileListRef loginItems = LSSharedFileListCreate(
+            NULL, kLSSharedFileListSessionLoginItems, NULL);
+        LSSharedFileListInsertItemURL(
+            loginItems, kLSSharedFileListItemBeforeFirst,
+            NULL, NULL, (__bridge CFURLRef)myURL, NULL, NULL);
+        CFRelease(loginItems);
     }
 }
 
 - (void)removeFromLoginItems {
-    NSString *myBundleIdentifier = self.bundleIdentifier; // Assuming this returns the correct bundle identifier
-
-    // Disable the login item
-    BOOL success = SMLoginItemSetEnabled((__bridge CFStringRef)myBundleIdentifier, false);
-    if (success) {
-        NSLog(@"Successfully removed from login items.");
-    } else {
-        NSLog(@"Failed to remove from login items.");
+    LSSharedFileListRef loginItems = LSSharedFileListCreate(
+        NULL, kLSSharedFileListSessionLoginItems, NULL);
+    NSURL *myURL = self.bundleURL;
+    UInt32 seed = 0;
+    NSArray *currentLoginItems = CFBridgingRelease(
+        LSSharedFileListCopySnapshot(loginItems, &seed));
+    for (id obj in currentLoginItems) {
+        LSSharedFileListItemRef item = (__bridge LSSharedFileListItemRef)obj;
+        CFURLRef itemURL = NULL;
+        if (!LSSharedFileListItemResolve(item, RESOLVE_FLAGS, &itemURL, NULL)) {
+            if (CFEqual(itemURL, (__bridge CFURLRef)myURL))
+                LSSharedFileListItemRemove(loginItems, item);
+            CFRelease(itemURL);
+        }
     }
+    CFRelease(loginItems);
 }
 
 - (BOOL)wasLaunchedAsLoginItemOrResume {
-    // Get the current process's identifier
-    pid_t currentProcessID = [[NSProcessInfo processInfo] processIdentifier];
-
-    // Allocate space for process info
-    struct proc_bsdinfo procInfo;
-    memset(&procInfo, 0, sizeof(procInfo)); // Zero out the structure
-
-    // Get the process information
-    if (proc_pidinfo(currentProcessID, PROC_PIDLISTFDS, 0, &procInfo, sizeof(procInfo)) > 0) {
-        pid_t parentProcessID = procInfo.pbi_ppid; // Get the parent process ID
-
-        // Get the parent application
-        NSRunningApplication *parentApp = [NSRunningApplication runningApplicationWithProcessIdentifier:parentProcessID];
-
-        // Check if the parent application is valid
-        if (parentApp) {
-            // Check the bundle identifier of the parent application
-            NSString *parentBundleIdentifier = parentApp.bundleIdentifier;
-            return [parentBundleIdentifier isEqualToString:@"your.bundle.identifier"]; // Replace with your app's bundle identifier
-        }
-    }
-
-    return NO; // Handle case where parent app could not be found
+    ProcessSerialNumber psn = { 0, kCurrentProcess };
+    NSDictionary *processInfo = CFBridgingRelease(
+        ProcessInformationCopyDictionary(
+            &psn, kProcessDictionaryIncludeAllInformationMask));
+    long long parent = [processInfo[@"ParentPSN"] longLongValue];
+    ProcessSerialNumber parentPsn = {
+        (parent >> 32) & 0x00000000FFFFFFFFLL,
+        parent & 0x00000000FFFFFFFFLL
+    };
+    
+    NSDictionary *parentInfo = CFBridgingRelease(
+        ProcessInformationCopyDictionary(
+            &parentPsn, kProcessDictionaryIncludeAllInformationMask));
+    return [parentInfo[@"FileCreator"] isEqualToString:@"lgnw"];
 }
+
+
 @end

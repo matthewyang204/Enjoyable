@@ -11,5 +11,6 @@
 
 @property (nonatomic, assign) int axis;
 @property (nonatomic, assign) float speed;
-
+@property (nonatomic, assign) BOOL set;
+@property (nonatomic, assign) BOOL inDeadZone;
 @end

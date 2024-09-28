@@ -26,6 +26,7 @@
 @property (nonatomic, strong) IBOutlet NSTextField *title;
 @property (nonatomic, strong) IBOutlet NSPopUpButton *mappingPopup;
 @property (nonatomic, strong) IBOutlet NSButton *smoothCheck;
+@property (nonatomic, strong) IBOutlet NSButton *setCheck;
 @property (nonatomic, strong) IBOutlet NSButton *unknownMapping;
 
 @property (nonatomic, weak) IBOutlet id <NJOutputViewControllerDelegate> delegate;
@@ -36,6 +37,7 @@
 - (IBAction)outputTypeChanged:(id)sender;
 - (IBAction)mouseDirectionChanged:(id)sender;
 - (IBAction)mouseButtonChanged:(id)sender;
+- (IBAction)mouseTypeChanged:(id)sender;
 - (IBAction)scrollDirectionChanged:(id)sender;
 - (IBAction)mouseSpeedChanged:(id)sender;
 - (IBAction)scrollSpeedChanged:(id)sender;

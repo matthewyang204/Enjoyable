@@ -19,6 +19,15 @@
 #import "NJOutputMouseMove.h"
 #import "NJOutputMouseScroll.h"
 
+typedef NS_ENUM(NSUInteger, NJOutputRow) {
+    NJOutputRowNone,
+    NJOutputRowKey,
+    NJOutputRowSwitch,
+    NJOutputRowMove,
+    NJOutputRowButton,
+    NJOutputRowScroll,
+};
+
 @implementation NJOutputViewController {
     NJInput *_input;
 }
@@ -41,20 +50,22 @@
 - (void)cleanUpInterface {
     NSInteger row = self.radioButtons.selectedRow;
     
-    if (row != 1) {
+    if (row != NJOutputRowKey) {
         self.keyInput.keyCode = NJKeyInputFieldEmpty;
         [self.keyInput resignIfFirstResponder];
     }
     
-    if (row != 2) {
+    if (row != NJOutputRowSwitch) {
         [self.mappingPopup selectItemAtIndex:-1];
         [self.mappingPopup resignIfFirstResponder];
         self.unknownMapping.hidden = YES;
     }
     
-    if (row != 3) {
+    if (row != NJOutputRowMove) {
         self.mouseDirSelect.selectedSegment = -1;
         self.mouseSpeedSlider.doubleValue = self.mouseSpeedSlider.minValue;
+        self.setCheck.state = NSOffState;
+        [self.setCheck resignIfFirstResponder];
         [self.mouseDirSelect resignIfFirstResponder];
     } else {
         if (self.mouseDirSelect.selectedSegment == -1)
@@ -63,16 +74,16 @@
             self.mouseSpeedSlider.floatValue = 10;
     }
     
-    if (row != 4) {
+    if (row != NJOutputRowButton) {
         self.mouseBtnSelect.selectedSegment = -1;
         [self.mouseBtnSelect resignIfFirstResponder];
     } else if (self.mouseBtnSelect.selectedSegment == -1)
         self.mouseBtnSelect.selectedSegment = 0;
     
-    if (row != 5) {
+    if (row != NJOutputRowScroll) {
         self.scrollDirSelect.selectedSegment = -1;
         self.scrollSpeedSlider.doubleValue = self.scrollSpeedSlider.minValue;
-        self.smoothCheck.state = NSControlStateValueOff;
+        self.smoothCheck.state = NSOffState;
         [self.scrollDirSelect resignIfFirstResponder];
         [self.scrollSpeedSlider resignIfFirstResponder];
         [self.smoothCheck resignIfFirstResponder];
@@ -91,57 +102,63 @@
 }
 
 - (void)keyInputField:(NJKeyInputField *)keyInput didChangeKey:(CGKeyCode)keyCode {
-    [self.radioButtons selectCellAtRow:1 column:0];
+    [self.radioButtons selectCellAtRow:NJOutputRowKey column:0];
     [self.radioButtons.window makeFirstResponder:self.radioButtons];
     [self commit];
 }
 
 - (void)keyInputFieldDidClear:(NJKeyInputField *)keyInput {
-    [self.radioButtons selectCellAtRow:0 column:0];
+    [self.radioButtons selectCellAtRow:NJOutputRowNone column:0];
     [self commit];
 }
 
 - (void)mappingChosen:(id)sender {
-    [self.radioButtons selectCellAtRow:2 column:0];
+    [self.radioButtons selectCellAtRow:NJOutputRowSwitch column:0];
     [self.mappingPopup.window makeFirstResponder:self.mappingPopup];
     self.unknownMapping.hidden = YES;
     [self commit];
 }
 
 - (void)mouseDirectionChanged:(NSView *)sender {
-    [self.radioButtons selectCellAtRow:3 column:0];
+    [self.radioButtons selectCellAtRow:NJOutputRowMove column:0];
+    [sender.window makeFirstResponder:sender];
+    [self commit];
+}
+
+- (void)mouseTypeChanged:(NSButton *)sender {
+    [self.radioButtons selectCellAtRow:NJOutputRowMove column:0];
     [sender.window makeFirstResponder:sender];
     [self commit];
 }
 
 - (void)mouseSpeedChanged:(NSSlider *)sender {
-    [self.radioButtons selectCellAtRow:3 column:0];
+    [self.radioButtons selectCellAtRow:NJOutputRowMove column:0];
     [sender.window makeFirstResponder:sender];
     [self commit];
 }
 
 - (void)mouseButtonChanged:(NSView *)sender {
-    [self.radioButtons selectCellAtRow:4 column:0];
+    [self.radioButtons selectCellAtRow:NJOutputRowButton column:0];
     [sender.window makeFirstResponder:sender];
     [self commit];
 }
 
 - (void)scrollDirectionChanged:(NSView *)sender {
-    [self.radioButtons selectCellAtRow:5 column:0];
+    [self.radioButtons selectCellAtRow:NJOutputRowScroll column:0];
     [sender.window makeFirstResponder:sender];
     [self commit];
 }
 
 - (void)scrollSpeedChanged:(NSSlider *)sender {
-    [self.radioButtons selectCellAtRow:5 column:0];
+    [self.radioButtons selectCellAtRow:NJOutputRowScroll column:0];
     [sender.window makeFirstResponder:sender];
     [self commit];
 }
 
 - (IBAction)scrollTypeChanged:(NSButton *)sender {
-    [self.radioButtons selectCellAtRow:5 column:0];
+    [self.radioButtons selectCellAtRow:NJOutputRowScroll column:0];
     [sender.window makeFirstResponder:sender];
-    if (sender.state == NSControlStateValueOn) {
+    if (sender.state == NSOnState) {
         self.scrollSpeedSlider.doubleValue =
             self.scrollSpeedSlider.minValue
             + (self.scrollSpeedSlider.maxValue - self.scrollSpeedSlider.minValue) / 2;
@@ -155,9 +172,9 @@
 
 - (NJOutput *)makeOutput {
     switch (self.radioButtons.selectedRow) {
-        case 0:
+        case NJOutputRowNone:
             return nil;
-        case 1:
+        case NJOutputRowKey:
             if (self.keyInput.hasKeyCode) {
                 NJOutputKeyPress *k = [[NJOutputKeyPress alloc] init];
                 k.keyCode = self.keyInput.keyCode;
@@ -166,28 +183,29 @@
                 return nil;
             }
             break;
-        case 2: {
+        case NJOutputRowSwitch: {
             NJOutputMapping *c = [[NJOutputMapping alloc] init];
             c.mapping = [self.delegate outputViewController:self
                                             mappingForIndex:self.mappingPopup.indexOfSelectedItem];
             return c;
         }
-        case 3: {
+        case NJOutputRowMove: {
             NJOutputMouseMove *mm = [[NJOutputMouseMove alloc] init];
             mm.axis = (int)self.mouseDirSelect.selectedSegment;
             mm.speed = self.mouseSpeedSlider.floatValue;
+            mm.set = self.setCheck.state == NSOnState;
             return mm;
         }
-        case 4: {
+        case NJOutputRowButton: {
             NJOutputMouseButton *mb = [[NJOutputMouseButton alloc] init];
             mb.button = (int)[self.mouseBtnSelect.cell tagForSegment:self.mouseBtnSelect.selectedSegment];
             return mb;
         }
-        case 5: {
+        case NJOutputRowScroll: {
             NJOutputMouseScroll *ms = [[NJOutputMouseScroll alloc] init];
             ms.direction = (int)[self.scrollDirSelect.cell tagForSegment:self.scrollDirSelect.selectedSegment];
             ms.speed = self.scrollSpeedSlider.floatValue;
-            ms.smooth = self.smoothCheck.state == NSControlStateValueOn;
+            ms.smooth = self.smoothCheck.state == NSOnState;
             return ms;
         }
         default:
@@ -215,6 +233,7 @@
     self.mouseBtnSelect.enabled = enabled;
     self.scrollDirSelect.enabled = enabled;
     self.smoothCheck.enabled = enabled;
+    self.setCheck.enabled = enabled;
     self.scrollSpeedSlider.enabled = enabled && self.smoothCheck.state;
     if (!enabled)
         self.unknownMapping.hidden = YES;
@@ -235,10 +254,10 @@
     }
 
     if ([output isKindOfClass:NJOutputKeyPress.class]) {
-        [self.radioButtons selectCellAtRow:1 column:0];
+        [self.radioButtons selectCellAtRow:NJOutputRowKey column:0];
         self.keyInput.keyCode = [(NJOutputKeyPress*)output keyCode];
     } else if ([output isKindOfClass:NJOutputMapping.class]) {
-        [self.radioButtons selectCellAtRow:2 column:0];
+        [self.radioButtons selectCellAtRow:NJOutputRowSwitch column:0];
         NSMenuItem *item = [self.mappingPopup itemWithIdenticalRepresentedObject:
                             [(NJOutputMapping *)output mapping]];
         [self.mappingPopup selectItem:item];
@@ -246,22 +265,23 @@
         self.unknownMapping.title = [(NJOutputMapping *)output mappingName];
     }
     else if ([output isKindOfClass:NJOutputMouseMove.class]) {
-        [self.radioButtons selectCellAtRow:3 column:0];
+        [self.radioButtons selectCellAtRow:NJOutputRowMove column:0];
         self.mouseDirSelect.selectedSegment = [(NJOutputMouseMove *)output axis];
         self.mouseSpeedSlider.floatValue = [(NJOutputMouseMove *)output speed];
+        self.setCheck.state = [(NJOutputMouseMove *)output set] ? NSOnState : NSOffState;
     }
     else if ([output isKindOfClass:NJOutputMouseButton.class]) {
-        [self.radioButtons selectCellAtRow:4 column:0];
+        [self.radioButtons selectCellAtRow:NJOutputRowButton column:0];
         [self.mouseBtnSelect selectSegmentWithTag:[(NJOutputMouseButton *)output button]];
     }
     else if ([output isKindOfClass:NJOutputMouseScroll.class]) {
-        [self.radioButtons selectCellAtRow:5 column:0];
+        [self.radioButtons selectCellAtRow:NJOutputRowScroll column:0];
         int direction = [(NJOutputMouseScroll *)output direction];
         float speed = [(NJOutputMouseScroll *)output speed];
         BOOL smooth = [(NJOutputMouseScroll *)output smooth];
         [self.scrollDirSelect selectSegmentWithTag:direction];
         self.scrollSpeedSlider.floatValue = speed;
-        self.smoothCheck.state = smooth ? NSControlStateValueOn : NSControlStateValueOff;
+        self.smoothCheck.state = smooth ? NSOnState : NSOffState;
         self.scrollSpeedSlider.enabled = smooth;
     } else {
         [self.radioButtons selectCellAtRow:self.enabled ? 0 : -1 column:0];

@@ -14,9 +14,22 @@ Enjoyable supports
  * Downloading and sharing input presets for different applications
  * Modern OS X features like resume and automatic termination
 
-Enjoyable is free software written by Joe Wreschnig and is based on
-the Enjoy codebase written by [Yifeng Huang](http://nongraphical.com)
+Enjoyable is free software written by Joe Wreschnig with minor additions
+by Sam Deane, and is based on the Enjoy codebase written by [Yifeng Huang](http://nongraphical.com)
 and [Sam McCall](http://abstractable.net/enjoy/).
+
+### New in 1.3
+
+Added in 1.3 is support for a "centered" mode for mouse move.
+
+In this mode, rather than nudging the mouse position left/right/up/down, tan analog input can be
+used to set the absolute location of the mouse as a deviation from the centre of the screen. The further
+the analog input is from the neutral point, the further away from the centre of the screen the mouse
+gets placed. 
+
+This is intended to be a better solution for games such as Elite: Dangerous which can map the mouse
+to yaw/roll/pitch, and where it's valuable to be able to have the mouse snap back to a central point
+when the input is released.
 
 ## How to Use
 

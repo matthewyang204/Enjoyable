@@ -35,9 +35,10 @@
 
 - (int)wheel:(int)n {
     int amount = abs(_direction) == n ? _direction / n : 0;
-    if (self.smooth)
-        amount = (int)(amount * _speed * self.magnitude);
-    return (int)amount;  // Explicitly cast to int
+    if (self.smooth) {
+        amount = (int)(amount * self.speed * self.magnitude);
+    }
+    return amount;
 }
 
 - (void)trigger {
