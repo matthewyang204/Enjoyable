@@ -69,6 +69,3 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 The joystick icon is from the Tango icon set and is public domain.
-
-Credits:
-erpapa (for his/her Enjoyable 1.3 repo, I finished off the remaining errors with it): https://github.com/erpapa
