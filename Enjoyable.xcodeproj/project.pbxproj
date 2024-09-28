@@ -550,6 +550,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = Enjoyable;
 				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Debug;
 		};
@@ -578,6 +579,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = Enjoyable;
 				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Release;
 		};
