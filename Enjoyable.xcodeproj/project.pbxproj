@@ -550,7 +550,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.yukkurigames.${PRODUCT_NAME:identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.matthewyang.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = Enjoyable;
 				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "x86_64 arm64";
@@ -580,7 +580,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.yukkurigames.${PRODUCT_NAME:identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.matthewyang.${PRODUCT_NAME:identifier}";
 				PRODUCT_NAME = Enjoyable;
 				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "x86_64 arm64";
