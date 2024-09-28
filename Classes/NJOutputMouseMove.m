@@ -19,6 +19,7 @@
     return @{ @"type": self.class.serializationCode,
               @"axis": @(_axis),
               @"speed": @(_speed),
+              @"set" : @(_set)
               };
 }
 
@@ -26,6 +27,7 @@
     NJOutputMouseMove *output = [[NJOutputMouseMove alloc] init];
     output.axis = [serialization[@"axis"] intValue];
     output.speed = [serialization[@"speed"] floatValue];
+    output.set = [serialization[@"set"] boolValue];
     if (output.speed == 0)
         output.speed = 10;
     return output;
@@ -43,10 +45,40 @@ static CGFloat pointRectSquaredDistance(NSPoint p, NSRect r) {
 
 #define CLAMP(a, l, h) MIN(h, MAX(a, l))
 
-- (BOOL)update:(NJInputController *)ic {
-    if (self.magnitude < 0.05)
-        return NO; // dead zone
-    
+- (NSScreen*)screenContaining:(NSPoint)mouseLoc {
+    for (NSScreen *screen in NSScreen.screens) {
+        if (NSMouseInRect(mouseLoc, screen.frame, NO)) {
+            return screen;
+        }
+    }
+
+    return nil;
+}
+
+
+- (NSScreen*)nearestScreenTo:(NSPoint)mouseLoc {
+    NSScreen *nearestScreen = nil;
+    NSArray *screens = NSScreen.screens;
+    CGFloat minDistance = 0;
+    for (NSScreen *screen in screens) {
+        CGFloat d = pointRectSquaredDistance(mouseLoc, screen.frame);
+        if (minDistance == 0 || d < minDistance) {
+            minDistance = d;
+            nearestScreen = screen;
+        }
+    }
+    return nearestScreen;
+}
+
+- (NSPoint)clampToScreen:(NSPoint)mouseLoc screen:(NSScreen*)screen {
+    NSRect frame = screen.frame;
+    mouseLoc.x = CLAMP(mouseLoc.x, NSMinX(frame), NSMaxX(frame) - 1);
+    mouseLoc.y = CLAMP(mouseLoc.y, NSMinY(frame) + 1, NSMaxY(frame));
+    return mouseLoc;
+}
+
+
+- (NSPoint)moveMouseFrom:(NSPoint)mouseLoc {
     CGFloat dx = 0, dy = 0;
     switch (_axis) {
         case 0:
@@ -62,42 +94,76 @@ static CGFloat pointRectSquaredDistance(NSPoint p, NSRect r) {
             dy = self.magnitude * _speed;
             break;
     }
-    NSPoint mouseLoc = ic.mouseLoc;
+
     mouseLoc.x = mouseLoc.x + dx;
     mouseLoc.y = mouseLoc.y - dy;
-    bool inScreen = false;
-    for (NSScreen *screen in NSScreen.screens) {
-        if (NSMouseInRect(mouseLoc, screen.frame, NO)) {
-            inScreen = true;
-            break;
-        }
+    NSScreen* screen = [self screenContaining:mouseLoc];
+    if (!screen) {
+        mouseLoc = [self clampToScreen:mouseLoc screen:[self nearestScreenTo:mouseLoc]];
     }
-    if (!inScreen) {
-        NSScreen *nearestScreen;
-        if (NSScreen.screens.count == 0) {
-            nearestScreen = NSScreen.screens[0];
-        } else {
-            CGFloat minDistance = 0;
-            for (NSScreen *screen in NSScreen.screens) {
-                CGFloat d = pointRectSquaredDistance(mouseLoc, screen.frame);
-                if (minDistance == 0 || d < minDistance) {
-                    minDistance = d;
-                    nearestScreen = screen;
-                }
-            }
+
+    return mouseLoc;
+}
+
+
+- (NSPoint)setMouseFrom:(NSPoint)mouseLoc {
+    NSScreen* screen = [self screenContaining:mouseLoc];
+    if (!screen) {
+        screen = [self nearestScreenTo:mouseLoc];
+    }
+
+    NSRect frame = screen.frame;
+    NSLog(@"%f", self.magnitude);
+
+    switch (_axis) {
+        case 0:
+            mouseLoc.x = NSMidX(frame) - (NSWidth(frame) * self.magnitude * 0.5 * (self.speed / 20.f));
+            break;
+        case 1:
+            mouseLoc.x = NSMidX(frame) + (NSWidth(frame) * self.magnitude * 0.5 * (self.speed / 20.f));
+            break;
+        case 2:
+            mouseLoc.y = NSMidY(frame) - (NSHeight(frame) * self.magnitude * 0.5 * (self.speed / 20.f));
+            break;
+        case 3:
+            mouseLoc.y = NSMidY(frame) + (NSHeight(frame) * self.magnitude * 0.5 * (self.speed / 20.f));
+            break;
+    }
+
+    mouseLoc = [self clampToScreen:mouseLoc screen:screen];
+    NSLog(@"%f,%f", mouseLoc.x, mouseLoc.y);
+
+    return mouseLoc;
+}
+
+
+- (BOOL)update:(NJInputController *)ic {
+
+    if (self.magnitude < 0.05) {
+        if (self.inDeadZone) {
+            return NO; // dead zone
         }
-        NSRect frame = nearestScreen.frame;
-        mouseLoc.x = CLAMP(mouseLoc.x, NSMinX(frame), NSMaxX(frame) - 1);
-        mouseLoc.y = CLAMP(mouseLoc.y, NSMinY(frame) + 1, NSMaxY(frame));
+        self.inDeadZone = YES;
+        self.magnitude = 0;
+    } else {
+        self.inDeadZone = NO;
+    }
+
+    NSPoint start = ic.mouseLoc;
+    NSPoint mouseLoc;
+    if (self.set) {
+        mouseLoc = [self setMouseFrom:start];
+    } else {
+        mouseLoc = [self moveMouseFrom:start];
     }
     ic.mouseLoc = mouseLoc;
-    
-    CGFloat height = ((NSScreen*)NSScreen.screens[0]).frame.size.height;
+
+    CGFloat height = ((NSScreen *)[NSScreen.screens firstObject]).frame.size.height;
     CGEventRef move = CGEventCreateMouseEvent(NULL, kCGEventMouseMoved,
                                               CGPointMake(mouseLoc.x, height - mouseLoc.y),
                                               0);
-    CGEventSetIntegerValueField(move, kCGMouseEventDeltaX, (int)dx);
-    CGEventSetIntegerValueField(move, kCGMouseEventDeltaY, (int)dy);
+    CGEventSetIntegerValueField(move, kCGMouseEventDeltaX, (int)(mouseLoc.x - start.x));
+    CGEventSetIntegerValueField(move, kCGMouseEventDeltaY, (int)(mouseLoc.y - start.y));
     CGEventPost(kCGHIDEventTap, move);
 
     if (CGEventSourceButtonState(kCGEventSourceStateHIDSystemState, kCGMouseButtonLeft)) {

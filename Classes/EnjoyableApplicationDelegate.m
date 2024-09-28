@@ -18,8 +18,9 @@
 
 - (void)didSwitchApplication:(NSNotification *)note {
     NSRunningApplication *activeApp = note.userInfo[NSWorkspaceApplicationKey];
-    if (activeApp)
+    if (activeApp) {
         [self.ic activateMappingForProcess:activeApp];
+    }
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)notification {
@@ -166,8 +167,9 @@
 }
 
 - (void)presentErrorSheet:(NSError *)error {
-    if (!_errors)
-        _errors = [[NSMutableArray alloc] initWithCapacity:1];
+    if (!_errors) {
+        _errors = [NSMutableArray array];
+    }
     [_errors insertObject:error atIndex:0];
     [self showNextError];
 }
