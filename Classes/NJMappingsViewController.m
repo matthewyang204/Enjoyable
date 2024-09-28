@@ -4,19 +4,16 @@
 //
 //  Created by Joe Wreschnig on 3/17/13.
 //
-//
 
 #import "NJMappingsViewController.h"
-
 #import "NJMapping.h"
 
 #define PB_ROW @"com.yukkurigames.Enjoyable.MappingRow"
 
-
 @implementation NJMappingsViewController
 
 - (void)awakeFromNib {
-    [self.mappingList registerForDraggedTypes:@[PB_ROW, NSURLPboardType]];
+    [self.mappingList registerForDraggedTypes:@[PB_ROW, NSPasteboardTypeFileURL]];
     [self.mappingList setDraggingSourceOperationMask:NSDragOperationCopy forLocal:NO];
 }
 
@@ -26,45 +23,38 @@
 }
 
 - (IBAction)removeClicked:(id)sender {
-    [self.delegate mappingsViewController:self
-                     removeMappingAtIndex:self.mappingList.selectedRow];
+    [self.delegate mappingsViewController:self removeMappingAtIndex:self.mappingList.selectedRow];
 }
 
 - (IBAction)moveUpClicked:(id)sender {
     NSInteger fromIdx = self.mappingList.selectedRow;
     NSInteger toIdx = fromIdx - 1;
-    [self.delegate mappingsViewController:self
-                     moveMappingFromIndex:fromIdx
-                                  toIndex:toIdx];
+    [self.delegate mappingsViewController:self moveMappingFromIndex:fromIdx toIndex:toIdx];
     [self.mappingList scrollRowToVisible:toIdx];
-    [self.mappingList selectRowIndexes:[[NSIndexSet alloc] initWithIndex:toIdx]
-                  byExtendingSelection:NO];
+    [self.mappingList selectRowIndexes:[[NSIndexSet alloc] initWithIndex:toIdx] byExtendingSelection:NO];
 }
 
 - (IBAction)moveDownClicked:(id)sender {
     NSInteger fromIdx = self.mappingList.selectedRow;
     NSInteger toIdx = fromIdx + 1;
-    [self.delegate mappingsViewController:self
-                     moveMappingFromIndex:fromIdx
-                                  toIndex:toIdx];
+    [self.delegate mappingsViewController:self moveMappingFromIndex:fromIdx toIndex:toIdx];
     [self.mappingList scrollRowToVisible:toIdx];
-    [self.mappingList selectRowIndexes:[[NSIndexSet alloc] initWithIndex:toIdx]
-                  byExtendingSelection:NO];
+    [self.mappingList selectRowIndexes:[[NSIndexSet alloc] initWithIndex:toIdx] byExtendingSelection:NO];
 }
 
 - (IBAction)mappingTriggerClicked:(id)sender {
     [self.mappingListPopover showRelativeToRect:self.mappingListTrigger.bounds
                                          ofView:self.mappingListTrigger
                                   preferredEdge:NSMinXEdge];
-    self.mappingListTrigger.state = NSOnState;
+    self.mappingListTrigger.state = NSControlStateValueOn;
 }
 
 - (void)popoverWillShow:(NSNotification *)notification {
-    self.mappingListTrigger.state = NSOnState;
+    self.mappingListTrigger.state = NSControlStateValueOn;
 }
 
 - (void)popoverWillClose:(NSNotification *)notification {
-    self.mappingListTrigger.state = NSOffState;
+    self.mappingListTrigger.state = NSControlStateValueOff;
 }
 
 - (void)beginUpdates {
@@ -94,66 +84,46 @@
 }
 
 - (void)changedActiveMappingToIndex:(NSInteger)index {
-    NJMapping *mapping = [self.delegate mappingsViewController:self
-                                               mappingForIndex:index];
-    self.removeMapping.enabled = [self.delegate mappingsViewController:self
-                                               canRemoveMappingAtIndex:index];
-    self.moveUp.enabled = [self.delegate mappingsViewController:self
-                                        canMoveMappingFromIndex:index toIndex:index - 1];
-    self.moveDown.enabled = [self.delegate mappingsViewController:self
-                                          canMoveMappingFromIndex:index toIndex:index + 1];
+    NJMapping *mapping = [self.delegate mappingsViewController:self mappingForIndex:index];
+    self.removeMapping.enabled = [self.delegate mappingsViewController:self canRemoveMappingAtIndex:index];
+    self.moveUp.enabled = [self.delegate mappingsViewController:self canMoveMappingFromIndex:index toIndex:index - 1];
+    self.moveDown.enabled = [self.delegate mappingsViewController:self canMoveMappingFromIndex:index toIndex:index + 1];
     self.mappingListTrigger.title = mapping.name;
     [self.mappingList selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
     [self.mappingList scrollRowToVisible:index];
     [NSUserDefaults.standardUserDefaults setInteger:index forKey:@"selected"];
-   
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)note {
     [self.mappingList abortEditing];
     NSTableView *tableView = note.object;
-    [self.delegate mappingsViewController:self
-                      choseMappingAtIndex:tableView.selectedRow];
+    [self.delegate mappingsViewController:self choseMappingAtIndex:tableView.selectedRow];
 }
 
 - (id)tableView:(NSTableView *)view objectValueForTableColumn:(NSTableColumn *)column row:(NSInteger)index {
-    return [self.delegate mappingsViewController:self
-                                 mappingForIndex:index].name;
+    return [self.delegate mappingsViewController:self mappingForIndex:index].name;
 }
 
-- (void)tableView:(NSTableView *)view
-   setObjectValue:(NSString *)obj
-   forTableColumn:(NSTableColumn *)col
-              row:(NSInteger)index {
-    [self.delegate mappingsViewController:self
-                     renameMappingAtIndex:index
-                                   toName:obj];
+- (void)tableView:(NSTableView *)view setObjectValue:(NSString *)obj forTableColumn:(NSTableColumn *)col row:(NSInteger)index {
+    [self.delegate mappingsViewController:self renameMappingAtIndex:index toName:obj];
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
     return [self.delegate numberOfMappings:self];
 }
 
-- (BOOL)tableView:(NSTableView *)tableView
-       acceptDrop:(id <NSDraggingInfo>)info
-              row:(NSInteger)row
-    dropOperation:(NSTableViewDropOperation)dropOperation {
+- (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation {
     NSPasteboard *pboard = [info draggingPasteboard];
     if ([pboard.types containsObject:PB_ROW]) {
         NSString *value = [pboard stringForType:PB_ROW];
         NSInteger srcRow = [value intValue];
         row -= srcRow < row;
-        [self.delegate mappingsViewController:self
-                         moveMappingFromIndex:srcRow
-                                      toIndex:row];
+        [self.delegate mappingsViewController:self moveMappingFromIndex:srcRow toIndex:row];
         return YES;
-    } else if ([pboard.types containsObject:NSURLPboardType]) {
+    } else if ([pboard.types containsObject:NSPasteboardTypeFileURL]) {
         NSURL *url = [NSURL URLFromPasteboard:pboard];
         NSError *error;
-        if (![self.delegate mappingsViewController:self
-                              importMappingFromURL:url
-                                           atIndex:row
-                                             error:&error]) {
+        if (![self.delegate mappingsViewController:self importMappingFromURL:url atIndex:row error:&error]) {
             [tableView presentError:error];
             return NO;
         } else {
@@ -164,15 +134,12 @@
     }
 }
 
-- (NSDragOperation)tableView:(NSTableView *)tableView
-                validateDrop:(id <NSDraggingInfo>)info
-                 proposedRow:(NSInteger)row
-       proposedDropOperation:(NSTableViewDropOperation)dropOperation {
+- (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation {
     NSPasteboard *pboard = [info draggingPasteboard];
     if ([pboard.types containsObject:PB_ROW]) {
         [tableView setDropRow:MAX(1, row) dropOperation:NSTableViewDropAbove];
         return NSDragOperationMove;
-    } else if ([pboard.types containsObject:NSURLPboardType]) {
+    } else if ([pboard.types containsObject:NSPasteboardTypeFileURL]) {
         NSURL *url = [NSURL URLFromPasteboard:pboard];
         if ([url.pathExtension isEqualToString:@"enjoyable"]) {
             [tableView setDropRow:MAX(1, row) dropOperation:NSTableViewDropAbove];
@@ -185,15 +152,21 @@
     }
 }
 
-- (NSArray *)tableView:(NSTableView *)tableView
-namesOfPromisedFilesDroppedAtDestination:(NSURL *)dropDestination
-forDraggedRowsWithIndexes:(NSIndexSet *)indexSet {
-    NJMapping *toSave = [self.delegate mappingsViewController:self
-                                              mappingForIndex:indexSet.firstIndex];
-    NSString *filename = [[toSave.name stringByFixingPathComponent]
-                          stringByAppendingPathExtension:@"enjoyable"];
+- (NSArray *)tableView:(NSTableView *)tableView namesOfPromisedFilesDroppedAtDestination:(NSURL *)dropDestination forDraggedRowsWithIndexes:(NSIndexSet *)indexSet {
+    NJMapping *toSave = [self.delegate mappingsViewController:self mappingForIndex:indexSet.firstIndex];
+    NSString *filename = [[toSave.name stringByDeletingPathExtension] stringByAppendingPathExtension:@"enjoyable"];
     NSURL *dst = [dropDestination URLByAppendingPathComponent:filename];
-    dst = [NSFileManager.defaultManager generateUniqueURLWithBase:dst];
+    
+    // Generate unique URL if file already exists
+    if ([[NSFileManager defaultManager] fileExistsAtPath:dst.path]) {
+        NSString *baseName = [filename stringByDeletingPathExtension];
+        NSInteger i = 1;
+        while ([[NSFileManager defaultManager] fileExistsAtPath:dst.path]) {
+            dst = [dropDestination URLByAppendingPathComponent:[NSString stringWithFormat:@"%@-%ld.enjoyable", baseName, (long)i]];
+            i++;
+        }
+    }
+    
     NSError *error;
     if (![toSave writeToURL:dst error:&error]) {
         [tableView presentError:error];
@@ -203,26 +176,23 @@ forDraggedRowsWithIndexes:(NSIndexSet *)indexSet {
     }
 }
 
-- (BOOL)tableView:(NSTableView *)tableView
-writeRowsWithIndexes:(NSIndexSet *)rowIndexes
-     toPasteboard:(NSPasteboard *)pboard {
-    if (rowIndexes.count == 1 && rowIndexes.firstIndex != 0) {
-        [pboard declareTypes:@[PB_ROW, NSFilesPromisePboardType] owner:nil];
-        [pboard setString:@(rowIndexes.firstIndex).stringValue forType:PB_ROW];
-        [pboard setPropertyList:@[@"enjoyable"] forType:NSFilesPromisePboardType];
-        return YES;
-    } else if (rowIndexes.count == 1 && rowIndexes.firstIndex == 0) {
-        [pboard declareTypes:@[NSFilesPromisePboardType] owner:nil];
-        [pboard setPropertyList:@[@"enjoyable"] forType:NSFilesPromisePboardType];
-        return YES;
-    } else {
-        return NO;
+- (BOOL)tableView:(NSTableView *)tableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard {
+    if (rowIndexes.count == 1) {
+        if (rowIndexes.firstIndex != 0) {
+            [pboard declareTypes:@[PB_ROW, NSPasteboardTypeFilePromise] owner:nil];
+            [pboard setString:@(rowIndexes.firstIndex).stringValue forType:PB_ROW];
+            [pboard setPropertyList:@[@"enjoyable"] forType:NSPasteboardTypeFilePromise];
+            return YES;
+        } else {
+            [pboard declareTypes:@[NSPasteboardTypeFilePromise] owner:nil];
+            [pboard setPropertyList:@[@"enjoyable"] forType:NSPasteboardTypeFilePromise];
+            return YES;
+        }
     }
+    return NO;
 }
 
 - (void)reloadData {
-    [self.mappingList reloadData];
 }
 
 @end
-

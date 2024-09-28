@@ -12,7 +12,7 @@
 #import <Cocoa/Cocoa.h>
 #include <libproc.h> // For proc_pidinfo
 
-static const UInt32 RESOLVE_FLAGS = kLSSharedFileListNoUserInteraction | kLSSharedFileListDoNotMountVolumes;
+//static const UInt32 RESOLVE_FLAGS = kLSSharedFileListNoUserInteraction | kLSSharedFileListDoNotMountVolumes;
 
 @implementation NSRunningApplication (LoginItem)
 
