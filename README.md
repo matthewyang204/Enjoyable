@@ -27,7 +27,7 @@ manual available in Help Viewer via `⌘?`.
 
 ## Requirements
 
-* Mac OS X 10.7+
+* Mac OS X 11+
 * One or more HID-compatible (e.g. USB or Bluetooth) input devices
 
 ## License
