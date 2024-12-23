@@ -57,6 +57,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 The joystick icon is from the Tango icon set and is public domain.
 
+# Building
+If you just want to get a binary of the architecture of your current computer, just run Product > Build in Xcode. However, if you want a universal binary for distribution on other websites, here's how:
+1. Clone and `cd` into the repo
+2. Run `xcodebuild -project Enjoyable.xcodeproj -scheme Enjoyable -configuration Release -arch arm64 -derivedDataPath ./build build` and copy the resulting app bundle to another location, such as the Downloads folder. You'll need it later.
+3. Run `xcodebuild -project Enjoyable.xcodeproj -scheme Enjoyable -configuration Release -arch x86_64 -derivedDataPath ./build build` and copy the resulting app bundle to the same location as you copied the first bundle, but just with a number after it.
+4. Copy the binary within the first bundle's MacOS folder into the second bundle's MacOS folder with `Enjoyable2` as its name and then delete the first bundle.
+5. Append a `1` to the remaining bundle's original binary's filename. The first binary should be named `Enjoyable1` by now.
+6. `cd` into the bundle's MacOS folder and then run `lipo -create -output Enjoyable Enjoyable1 Enjoyable2`
+7. Delete `Enjoyable1` and `Enjoyable2` and then run `killall Finder` to restart Finder's metadata cache. The bundle should now show up as Universal.
+
 # Blocked execution
 If your Mac says something like "Unidentified developer" in a pop-up when you try to open the app, try running this in a terminal under an administrator account:
 ```
