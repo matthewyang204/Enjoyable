@@ -21,10 +21,11 @@ static float normalize(CFIndex p, CFIndex min, CFIndex max) {
                 index:(int)index
                parent:(NJInputPathElement *)parent
 {
-    if ((self = [super initWithName:NJINPUT_NAME(NSLocalizedString(@"axis %d", @"axis name"), index)
-                                eid:NJINPUT_EID("Axis", index)
-                            element:element
-                             parent:parent])) {
+    self = [super initWithName:NJINPUT_NAME(NSLocalizedString(@"axis %d", @"axis name"), index)
+                           eid:NJINPUT_EID("Axis", index)
+                       element:element
+                        parent:parent];
+    if (self) {
         self.children = @[[[NJInput alloc] initWithName:NSLocalizedString(@"axis low", @"axis low trigger")
                                                     eid:@"Low"
                                                    parent:self],
@@ -40,12 +41,12 @@ static float normalize(CFIndex p, CFIndex min, CFIndex max) {
 
 - (id)findSubInputForValue:(IOHIDValueRef)value {
     float mag = normalize(IOHIDValueGetIntegerValue(value), _rawMin, _rawMax);
-    if (mag < -_deadZone)
+    if (mag < -_deadZone) {
         return self.children[0];
-    else if (mag > _deadZone)
+    } else if (mag > _deadZone) {
         return self.children[1];
-    else
-        return nil;
+    }
+    return nil;
 }
 
 - (void)notifyEvent:(IOHIDValueRef)value {

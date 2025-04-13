@@ -6,7 +6,8 @@
 //
 
 #import "NJOutputViewController.h"
-
+#import "NSView+FirstResponder.h"
+#import "NSMenu+RepresentedObjectAccessors.h"
 #import "NJMapping.h"
 #import "NJInput.h"
 #import "NJEvents.h"
@@ -33,7 +34,8 @@ typedef NS_ENUM(NSUInteger, NJOutputRow) {
 }
 
 - (id)init {
-    if ((self = [super init])) {
+    self = [super init];
+    if (self) {
         [NSNotificationCenter.defaultCenter
             addObserver:self
             selector:@selector(mappingListDidChange:)
@@ -68,17 +70,20 @@ typedef NS_ENUM(NSUInteger, NJOutputRow) {
         [self.setCheck resignIfFirstResponder];
         [self.mouseDirSelect resignIfFirstResponder];
     } else {
-        if (self.mouseDirSelect.selectedSegment == -1)
+        if (self.mouseDirSelect.selectedSegment == -1) {
             self.mouseDirSelect.selectedSegment = 0;
-        if (self.mouseSpeedSlider.floatValue == 0)
+        }
+        if (self.mouseSpeedSlider.floatValue == 0) {
             self.mouseSpeedSlider.floatValue = 10;
+        }
     }
     
     if (row != NJOutputRowButton) {
         self.mouseBtnSelect.selectedSegment = -1;
         [self.mouseBtnSelect resignIfFirstResponder];
-    } else if (self.mouseBtnSelect.selectedSegment == -1)
+    } else if (self.mouseBtnSelect.selectedSegment == -1) {
         self.mouseBtnSelect.selectedSegment = 0;
+    }
     
     if (row != NJOutputRowScroll) {
         self.scrollDirSelect.selectedSegment = -1;
@@ -88,16 +93,18 @@ typedef NS_ENUM(NSUInteger, NJOutputRow) {
         [self.scrollSpeedSlider resignIfFirstResponder];
         [self.smoothCheck resignIfFirstResponder];
     } else {
-        if (self.scrollDirSelect.selectedSegment == -1)
+        if (self.scrollDirSelect.selectedSegment == -1) {
             self.scrollDirSelect.selectedSegment = 0;
+        }
     }
         
 }
 
 - (IBAction)outputTypeChanged:(NSView *)sender {
     [sender.window makeFirstResponder:sender];
-    if (self.radioButtons.selectedRow == 1)
+    if (self.radioButtons.selectedRow == 1) {
         [self.keyInput.window makeFirstResponder:self.keyInput];
+    }
     [self commit];
 }
 
@@ -159,9 +166,7 @@ typedef NS_ENUM(NSUInteger, NJOutputRow) {
     [self.radioButtons selectCellAtRow:NJOutputRowScroll column:0];
     [sender.window makeFirstResponder:sender];
     if (sender.state == NSOnState) {
-        self.scrollSpeedSlider.doubleValue =
-            self.scrollSpeedSlider.minValue
-            + (self.scrollSpeedSlider.maxValue - self.scrollSpeedSlider.minValue) / 2;
+        self.scrollSpeedSlider.doubleValue = (self.scrollSpeedSlider.minValue + self.scrollSpeedSlider.maxValue) / 2;
         self.scrollSpeedSlider.enabled = YES;
     } else {
         self.scrollSpeedSlider.doubleValue = self.scrollSpeedSlider.minValue;
@@ -208,9 +213,11 @@ typedef NS_ENUM(NSUInteger, NJOutputRow) {
             ms.smooth = self.smoothCheck.state == NSOnState;
             return ms;
         }
-        default:
+        default: {
             return nil;
+        }
     }
+    return nil;
 }
 
 - (void)commit {
@@ -235,8 +242,9 @@ typedef NS_ENUM(NSUInteger, NJOutputRow) {
     self.smoothCheck.enabled = enabled;
     self.setCheck.enabled = enabled;
     self.scrollSpeedSlider.enabled = enabled && self.smoothCheck.state;
-    if (!enabled)
+    if (!enabled) {
         self.unknownMapping.hidden = YES;
+    }
 }
 
 - (void)loadOutput:(NJOutput *)output forInput:(NJInput *)input {
@@ -290,10 +298,11 @@ typedef NS_ENUM(NSUInteger, NJOutputRow) {
 }
 
 - (void)focusKey {
-    if (self.radioButtons.selectedRow <= 1)
+    if (self.radioButtons.selectedRow <= 1) {
         [self.keyInput.window makeFirstResponder:self.keyInput];
-    else
+    } else {
         [self.keyInput resignIfFirstResponder];
+    }
 }
 
 - (void)mappingListDidChange:(NSNotification *)note {

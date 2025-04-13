@@ -19,10 +19,11 @@
                 index:(int)index
                parent:(NJInputPathElement *)parent
 {
-    if ((self = [super initWithName:NJINPUT_NAME(NSLocalizedString(@"button %d", @"button name"), index)
-                                eid:NJINPUT_EID("Button", index)
-                            element:element
-                             parent:parent])) {
+    self = [super initWithName:NJINPUT_NAME(NSLocalizedString(@"button %d", @"button name"), index)
+                           eid:NJINPUT_EID("Button", index)
+                       element:element
+                        parent:parent];
+    if (self) {
         _min = IOHIDElementGetLogicalMin(element);
         _max = IOHIDElementGetLogicalMax(element);
     }

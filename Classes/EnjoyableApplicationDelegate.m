@@ -6,7 +6,8 @@
 //
 
 #import "EnjoyableApplicationDelegate.h"
-
+#import "NSRunningApplication+LoginItem.h"
+#import "NSString+FixFilename.h"
 #import "NJMapping.h"
 #import "NJInput.h"
 #import "NJEvents.h"
@@ -14,6 +15,10 @@
 @implementation EnjoyableApplicationDelegate {
     NSStatusItem *statusItem;
     NSMutableArray *_errors;
+}
+
+- (BOOL)applicationSupportsSecureRestorableState:(NSApplication *)app {
+    return YES;
 }
 
 - (void)didSwitchApplication:(NSNotification *)note {
@@ -42,9 +47,7 @@
 
     [self.ic load];
     [self.mvc.mappingList reloadData];
-    [self.mvc changedActiveMappingToIndex:
-     [self.ic indexOfMapping:
-      self.ic.currentMapping]];
+    [self.mvc changedActiveMappingToIndex:[self.ic indexOfMapping:self.ic.currentMapping]];
 
     statusItem = [NSStatusBar.systemStatusBar statusItemWithLength:36];
     statusItem.image = [NSImage imageNamed:@"Status Menu Icon Disabled"];
@@ -55,10 +58,11 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
     if ([NSUserDefaults.standardUserDefaults boolForKey:@"hidden in status item"]
-        && NSRunningApplication.currentApplication.wasLaunchedAsLoginItemOrResume)
+        && NSRunningApplication.currentApplication.wasLaunchedAsLoginItemOrResume) {
         [self transformIntoElement:nil];
-    else
+    } else {
         [self.window makeKeyAndOrderFront:nil];
+    }
 }
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)theApplication
@@ -79,8 +83,9 @@
 }
 
 - (void)applicationWillBecomeActive:(NSNotification *)notification {
-    if (self.window.isVisible)
+    if (self.window.isVisible) {
         [self restoreToForeground:notification];
+    }
 }
 
 - (void)transformIntoElement:(id)sender {
@@ -135,11 +140,13 @@
     NSUInteger idx = [note.userInfo[NJMappingIndexKey] intValue];
     [self.mvc changedActiveMappingToIndex:idx];
 
-    if (!self.window.isVisible)
-        for (int i = 0; i < 4; ++i)
+    if (!self.window.isVisible) {
+        for (int i = 0; i < 4; ++i) {
             [self performSelector:@selector(flashStatusItem)
                        withObject:self
                        afterDelay:0.2 * i];
+        }
+    }
     [self loadOutputForInput:self.dvc.selectedHandler];
 }
 
@@ -210,23 +217,22 @@
     panel.allowedFileTypes = @[ @"enjoyable", @"json", @"txt" ];
     [panel beginSheetModalForWindow:self.window
                   completionHandler:^(NSInteger result) {
-                      if (result != NSFileHandlingPanelOKButton)
-                          return;
-                      [panel close];
-                      NSError *error;
-                      NJMapping *mapping = [NJMapping mappingWithContentsOfURL:panel.URL
-                                                                         error:&error];
-                      if ([[self.ic mappingForKey:mapping.name] hasConflictWith:mapping]) {
-                          [self promptForMapping:mapping atIndex:self.ic.mappings.count];
-                      } else if ([self.ic mappingForKey:mapping.name]) {
-                          [[self.ic mappingForKey:mapping.name] mergeEntriesFrom:mapping];
-                      } else if (mapping) {
-                          [self.ic addMapping:mapping];
-                      } else {
-                          [self presentErrorSheet:error];
-                      }
-                  }];
-    
+        if (result != NSFileHandlingPanelOKButton) {
+            return;
+        }
+        [panel close];
+        NSError *error;
+        NJMapping *mapping = [NJMapping mappingWithContentsOfURL:panel.URL  error:&error];
+        if ([[self.ic mappingForKey:mapping.name] hasConflictWith:mapping]) {
+            [self promptForMapping:mapping atIndex:self.ic.mappings.count];
+        } else if ([self.ic mappingForKey:mapping.name]) {
+            [[self.ic mappingForKey:mapping.name] mergeEntriesFrom:mapping];
+        } else if (mapping) {
+            [self.ic addMapping:mapping];
+        } else {
+            [self presentErrorSheet:error];
+        }
+    }];
 }
 
 - (void)exportMappingClicked:(id)sender {
@@ -236,20 +242,20 @@
     panel.nameFieldStringValue = [mapping.name stringByFixingPathComponent];
     [panel beginSheetModalForWindow:self.window
                   completionHandler:^(NSInteger result) {
-                      if (result != NSFileHandlingPanelOKButton)
-                          return;
-                      [panel close];
-                      NSError *error;
-                      if (![mapping writeToURL:panel.URL error:&error]) {
-                          [self presentErrorSheet:error];
-                      }
-                  }];
+        if (result != NSFileHandlingPanelOKButton) {
+            return;
+        }
+        [panel close];
+        NSError *error;
+        if (![mapping writeToURL:panel.URL error:&error]) {
+            [self presentErrorSheet:error];
+        }
+    }];
 }
 
 - (void)mappingConflictDidResolve:(NSAlert *)alert
                        returnCode:(NSInteger)returnCode
-                      contextInfo:(void *)contextInfo {
-    NSDictionary *userInfo = CFBridgingRelease(contextInfo);
+                         userInfo:(NSDictionary *)userInfo {
     NJMapping *oldMapping = userInfo[@"old mapping"];
     NJMapping *newMapping = userInfo[@"new mapping"];
     NSInteger idx = [userInfo[@"index"] intValue];
@@ -281,12 +287,14 @@
     [conflictAlert addButtonWithTitle:NSLocalizedString(@"import and merge", @"button to merge imported mappings")];
     [conflictAlert addButtonWithTitle:NSLocalizedString(@"cancel import", @"button to cancel import")];
     [conflictAlert addButtonWithTitle:NSLocalizedString(@"import new mapping", @"button to import as new mapping")];
+
+    NSDictionary *userInfo = @{ @"index": @(idx),
+                                @"old mapping": mergeInto,
+                                @"new mapping": mapping };
     [conflictAlert beginSheetModalForWindow:self.window
-                              modalDelegate:self
-                             didEndSelector:@selector(mappingConflictDidResolve:returnCode:contextInfo:)
-                                contextInfo:(void *)CFBridgingRetain(@{ @"index": @(idx),
-                                                                        @"old mapping": mergeInto,
-                                                                        @"new mapping": mapping })];
+                          completionHandler:^(NSModalResponse returnCode) {
+        [self mappingConflictDidResolve:conflictAlert returnCode:returnCode userInfo:userInfo];
+    }];
 }
 
 - (NSInteger)numberOfMappings:(NJMappingsViewController *)mvc {

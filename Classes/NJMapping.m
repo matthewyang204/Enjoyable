@@ -6,7 +6,7 @@
 //
 
 #import "NJMapping.h"
-
+#import "NSError+Description.h"
 #import "NJInput.h"
 #import "NJOutput.h"
 
@@ -18,7 +18,8 @@
 // from untrusted serializations.
 
 - (id)init {
-    if ((self = [super init])) {
+    self = [super init];
+    if (self) {
         self.name = NSLocalizedString(@"Untitled", @"name for new mappings");
         _entries = [[NSMutableDictionary alloc] init];
     }
@@ -26,22 +27,26 @@
 }
 
 - (id)initWithName:(NSString *)name {
-    if ((self = [self init])) {
-        if ([name isKindOfClass:NSString.class])
+    self = [self init];
+    if (self) {
+        if ([name isKindOfClass:NSString.class]) {
             self.name = name;
+        }
     }
     return self;
 }
 
 - (id)initWithSerialization:(NSDictionary *)serialization {
-    if ((self = [self initWithName:serialization[@"name"]])) {
+    self = [self initWithName:serialization[@"name"]];
+    if (self) {
         NSDictionary *entries = serialization[@"entries"];
         if ([entries isKindOfClass:NSDictionary.class]) {
             for (id key in entries) {
                 if ([key isKindOfClass:NSString.class]) {
                     NJOutput *output = [NJOutput outputWithSerialization:entries[key]];
-                    if (output)
+                    if (output) {
                         _entries[key] = output;
+                    }
                 }
             }
         }
@@ -55,10 +60,11 @@
 
 - (void)setObject:(NJOutput *)output forKeyedSubscript:(NJInput *)input {
     if (input) {
-        if (output)
+        if (output) {
             _entries[input.uid] = output;
-        else
+        } else {
             [_entries removeObjectForKey:input.uid];
+        }
     }
 }
 
@@ -66,8 +72,9 @@
     NSMutableDictionary *entries = [[NSMutableDictionary alloc] initWithCapacity:_entries.count];
     for (id key in _entries) {
         id serialized = [_entries[key] serialize];
-        if (serialized)
+        if (serialized) {
             entries[key] = serialized;
+        }
     }
     return @{ @"name": _name, @"entries": entries };
 }
@@ -88,12 +95,14 @@
 }
 
 - (BOOL)hasConflictWith:(NJMapping *)other {
-    if (other.count < self.count)
+    if (other.count < self.count) {
         return [other hasConflictWith:self];
+    }
     for (NSString *uid in _entries) {
         NJOutput *output = other->_entries[uid];
-        if (output && ![output isEqual:_entries[uid]])
+        if (output && ![output isEqual:_entries[uid]]) {
             return YES;
+        }
     }
     return NO;
 }
@@ -108,8 +117,9 @@
         : nil;
     [stream close];
     
-    if (!serialization && error)
+    if (!serialization && error) {
         return nil;
+    }
     
     if (!([serialization isKindOfClass:NSDictionary.class]
           && [serialization[@"name"] isKindOfClass:NSString.class]
@@ -125,13 +135,15 @@
 }
 
 - (void)mergeEntriesFrom:(NJMapping *)other {
-    if (other)
+    if (other) {
         [_entries addEntriesFromDictionary:other->_entries];
+    }
 }
 
 - (void)postLoadProcess:(id <NSFastEnumeration>)allMappings {
-    for (NJOutput *o in _entries.allValues)
+    for (NJOutput *o in _entries.allValues) {
         [o postLoadProcess:allMappings];
+    }
 }
 
 

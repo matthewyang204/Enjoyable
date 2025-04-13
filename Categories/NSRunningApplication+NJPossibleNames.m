@@ -59,27 +59,28 @@
     NSArray *genericExecutables = @[ @"wine.bin" ];
     BOOL probablyWrong = ([genericBundles containsObject:self.bundleIdentifier]
                           || [genericExecutables containsObject:self.localizedName]);
-    if (!probablyWrong && self.localizedName)
+    if (!probablyWrong && self.localizedName) {
         return self.localizedName;
-    else if (!probablyWrong && self.bundleIdentifier)
+    } else if (!probablyWrong && self.bundleIdentifier) {
         return self.bundleIdentifier;
-    else if (self.bundleURL)
+    } else if (self.bundleURL) {
         return [self.bundleURL.lastPathComponent stringByDeletingPathExtension];
-    else if (self.frontWindowTitle)
+    } else if (self.frontWindowTitle) {
         return self.frontWindowTitle;
-    else if (self.executableURL)
+    } else if (self.executableURL) {
         return self.executableURL.lastPathComponent;
-    else if (self.localizedName)
+    } else if (self.localizedName) {
         return self.localizedName;
-    else if (self.bundleIdentifier)
+    } else if (self.bundleIdentifier) {
         return self.bundleIdentifier;
-    else {
+    } else {
         return NSLocalizedString(@"@Application",
                                  @"Magic string to trigger automatic "
                                  @"mapping renames. It should look like "
                                  @"an identifier rather than normal "
                                  @"word, with the @ on the front.");
     }
+    return @"Default";
 }
 
 @end

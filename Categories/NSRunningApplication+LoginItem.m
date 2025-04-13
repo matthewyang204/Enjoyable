@@ -25,13 +25,14 @@ static const UInt32 RESOLVE_FLAGS = kLSSharedFileListNoUserInteraction
         LSSharedFileListCopySnapshot(loginItems, &seed));
     for (id obj in currentLoginItems) {
         LSSharedFileListItemRef item = (__bridge LSSharedFileListItemRef)obj;
-        CFURLRef itemURL = NULL;
-        if (!LSSharedFileListItemResolve(item, RESOLVE_FLAGS, &itemURL, NULL)) {
+        CFURLRef itemURL = LSSharedFileListItemCopyResolvedURL(item, RESOLVE_FLAGS, NULL);
+        if (itemURL != NULL) {
             found = CFEqual(itemURL, (__bridge CFURLRef)myURL);
             CFRelease(itemURL);
         }
-        if (found)
+        if (found) {
             break;
+        }
     }
     CFRelease(loginItems);
 	return found;
@@ -43,10 +44,12 @@ static const UInt32 RESOLVE_FLAGS = kLSSharedFileListNoUserInteraction
         NSURL *myURL = self.bundleURL;
         LSSharedFileListRef loginItems = LSSharedFileListCreate(
             NULL, kLSSharedFileListSessionLoginItems, NULL);
-        LSSharedFileListInsertItemURL(
-            loginItems, kLSSharedFileListItemBeforeFirst,
-            NULL, NULL, (__bridge CFURLRef)myURL, NULL, NULL);
-        CFRelease(loginItems);
+        if (loginItems != NULL) {
+            LSSharedFileListInsertItemURL(
+                loginItems, kLSSharedFileListItemBeforeFirst,
+                NULL, NULL, (__bridge CFURLRef)myURL, NULL, NULL);
+            CFRelease(loginItems);
+        }
     }
 }
 
@@ -59,10 +62,11 @@ static const UInt32 RESOLVE_FLAGS = kLSSharedFileListNoUserInteraction
         LSSharedFileListCopySnapshot(loginItems, &seed));
     for (id obj in currentLoginItems) {
         LSSharedFileListItemRef item = (__bridge LSSharedFileListItemRef)obj;
-        CFURLRef itemURL = NULL;
-        if (!LSSharedFileListItemResolve(item, RESOLVE_FLAGS, &itemURL, NULL)) {
-            if (CFEqual(itemURL, (__bridge CFURLRef)myURL))
+        CFURLRef itemURL = LSSharedFileListItemCopyResolvedURL(item, RESOLVE_FLAGS, NULL);
+        if (itemURL != NULL) {
+            if (CFEqual(itemURL, (__bridge CFURLRef)myURL)) {
                 LSSharedFileListItemRemove(loginItems, item);
+            }
             CFRelease(itemURL);
         }
     }
@@ -71,6 +75,8 @@ static const UInt32 RESOLVE_FLAGS = kLSSharedFileListNoUserInteraction
 
 - (BOOL)wasLaunchedAsLoginItemOrResume {
     ProcessSerialNumber psn = { 0, kCurrentProcess };
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     NSDictionary *processInfo = CFBridgingRelease(
         ProcessInformationCopyDictionary(
             &psn, kProcessDictionaryIncludeAllInformationMask));
@@ -79,10 +85,10 @@ static const UInt32 RESOLVE_FLAGS = kLSSharedFileListNoUserInteraction
         (parent >> 32) & 0x00000000FFFFFFFFLL,
         parent & 0x00000000FFFFFFFFLL
     };
-    
     NSDictionary *parentInfo = CFBridgingRelease(
         ProcessInformationCopyDictionary(
             &parentPsn, kProcessDictionaryIncludeAllInformationMask));
+#pragma clang diagnostic pop
     return [parentInfo[@"FileCreator"] isEqualToString:@"lgnw"];
 }
 

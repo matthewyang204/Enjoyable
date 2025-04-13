@@ -6,9 +6,9 @@
 //
 
 #import "NJKeyInputField.h"
-
+#import "NSView+FirstResponder.h"
 #include <Carbon/Carbon.h>
-    // Only used for kVK_... codes.
+// Only used for kVK_... codes.
 
 enum {
     kVK_Insert = 0x72,
@@ -28,7 +28,8 @@ const CGKeyCode NJKeyInputFieldEmpty = kVK_MAX;
 }
 
 - (id)initWithFrame:(NSRect)frameRect {
-    if ((self = [super initWithFrame:frameRect])) {
+    self = [super initWithFrame:frameRect];
+    if (self) {
         field = [[NSTextField alloc] initWithFrame:self.bounds];
         field.alignment = NSCenterTextAlignment;
         field.editable = NO;
@@ -287,10 +288,11 @@ static BOOL isValidKeyCode(long code) {
                                @"shown when user must enter a key code to map to")];
             [self.window makeFirstResponder:field];
         } else {
-            if (self.window.firstResponder == self)
+            if (self.window.firstResponder == self) {
                 [self.window makeFirstResponder:nil];
-            else if (self.acceptsFirstResponder)
+            } else if (self.acceptsFirstResponder) {
                 [self.window makeFirstResponder:self];
+            }
         }
     }
 }

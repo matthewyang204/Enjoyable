@@ -21,9 +21,8 @@
     if (idx > minIndex && idx != NSNotFound) {
         [self exchangeObjectAtIndex:idx withObjectAtIndex:idx - 1];
         return YES;
-    } else {
-        return NO;
     }
+    return NO;
 }
 
 - (BOOL)moveLastwards:(id)object upTo:(NSUInteger)maxIndex {
@@ -32,9 +31,8 @@
     if (idx < maxIndex && idx != NSNotFound) {
         [self exchangeObjectAtIndex:idx withObjectAtIndex:idx + 1];
         return YES;
-    } else {
-        return NO;
     }
+    return NO;
 }
 
 - (BOOL)moveFirstwards:(id)object {

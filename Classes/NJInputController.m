@@ -4,7 +4,9 @@
 //
 
 #import "NJInputController.h"
-
+#import "NSRunningApplication+NJPossibleNames.h"
+#import "NSProcessInfo+Debugging.h"
+#import "NSMutableArray+MoveObject.h"
 #import "NJMapping.h"
 #import "NJDevice.h"
 #import "NJInput.h"
@@ -44,7 +46,8 @@ static CVReturn _updateDL(CVDisplayLinkRef displayLink,
 #define NSSTR(e) ((NSString *)CFSTR(e))
 
 - (id)init {
-    if ((self = [super init])) {
+    self = [super init];
+    if (self) {
         _devices = [[NSMutableArray alloc] initWithCapacity:16];
         _continousOutputs = [[NSMutableArray alloc] initWithCapacity:32];
 
@@ -109,10 +112,12 @@ static CVReturn _updateDL(CVDisplayLinkRef displayLink,
 - (void)addRunningOutput:(NJOutput *)output {
     // Axis events will trigger every small movement, don't keep
     // re-adding them or they trigger multiple times each time.
-    if (![_continousOutputs containsObject:output])
+    if (![_continousOutputs containsObject:output]) {
         [_continousOutputs addObject:output];
-    if (_displayLink && !CVDisplayLinkIsRunning(_displayLink))
+    }
+    if (_displayLink && !CVDisplayLinkIsRunning(_displayLink)) {
         CVDisplayLinkStart(_displayLink);
+    }
 }
 
 - (void)runOutputForValue:(IOHIDValueRef)value {
@@ -126,8 +131,9 @@ static CVReturn _updateDL(CVDisplayLinkRef displayLink,
         NJOutput *output = self.currentMapping[subInput];
         output.magnitude = subInput.magnitude;
         output.running = subInput.active;
-        if ((output.running || output.magnitude != 0) && output.isContinuous)
+        if ((output.running || output.magnitude != 0) && output.isContinuous) {
             [self addRunningOutput:output];
+        }
     }
 }
 
@@ -136,8 +142,9 @@ static CVReturn _updateDL(CVDisplayLinkRef displayLink,
     IOHIDDeviceRef device = elt ? IOHIDElementGetDevice(elt) : NULL;
     NJDevice *dev = [self findDeviceByRef:device];
     NJInput *handler = [dev handlerForEvent:value];
-    if (!handler)
+    if (!handler) {
         return;
+    }
     
     [self.delegate inputController:self didInput:handler];
 }
@@ -172,9 +179,11 @@ static CVReturn _updateDL(CVDisplayLinkRef displayLink,
 }
 
 - (NJDevice *)findDeviceByRef:(IOHIDDeviceRef)device {
-    for (NJDevice *dev in _devices)
-        if (dev.device == device)
+    for (NJDevice *dev in _devices) {
+        if (dev.device == device)  {
             return dev;
+        }
+    }
     return nil;
 }
 
@@ -202,8 +211,9 @@ static CVReturn _updateDL(CVDisplayLinkRef displayLink,
 - (void)HIDManager:(NJHIDManager *)manager didError:(NSError *)error {
     [self.delegate inputController:self didError:error];
     self.simulatingEvents = NO;
-    if (_displayLink)
+    if (_displayLink) {
         CVDisplayLinkStop(_displayLink);
+    }
 }
 
 - (void)HIDManagerDidStart:(NJHIDManager *)manager {
@@ -212,8 +222,9 @@ static CVReturn _updateDL(CVDisplayLinkRef displayLink,
 
 - (void)HIDManagerDidStop:(NJHIDManager *)manager {
     [_devices removeAllObjects];
-    if (_displayLink)
+    if (_displayLink) {
         CVDisplayLinkStop(_displayLink);
+    }
     [self.delegate inputControllerDidStopHID:self];
 }
 
@@ -234,31 +245,36 @@ static CVReturn _updateDL(CVDisplayLinkRef displayLink,
         [NSNotificationCenter.defaultCenter postNotificationName:name
                                                           object:self];
 
-        if (!simulatingEvents && !NSApplication.sharedApplication.isActive)
+        if (!simulatingEvents && !NSApplication.sharedApplication.isActive) {
             [self stopHid];
-        else
+        } else {
             [self startHid];
+        }
     }
 }
 
 - (void)stopHidIfDisabled:(NSNotification *)application {
-    if (!self.simulatingEvents && !NSProcessInfo.processInfo.isBeingDebugged)
+    if (!self.simulatingEvents && !NSProcessInfo.processInfo.isBeingDebugged) {
         [self stopHid];
+    }
 }
 
 - (NJInputPathElement *)elementForUID:(NSString *)uid {
     for (NJDevice *dev in _devices) {
         id item = [dev elementForUID:uid];
-        if (item)
+        if (item) {
             return item;
+        }
     }
     return nil;
 }
 
 - (NJMapping *)mappingForKey:(NSString *)name {
-    for (NJMapping *mapping in _mappings)
-        if ([name isEqualToString:mapping.name])
+    for (NJMapping *mapping in _mappings) {
+        if ([name isEqualToString:mapping.name]) {
             return mapping;
+        }
+    }
     return nil;
 }
 
@@ -312,10 +328,12 @@ static CVReturn _updateDL(CVDisplayLinkRef displayLink,
 }
 
 - (void)activateMapping:(NJMapping *)mapping {
-    if (!mapping)
+    if (!mapping) {
         mapping = _manualMapping;
-    if (mapping == _currentMapping)
+    }
+    if (mapping == _currentMapping) {
         return;
+    }
     _manualMapping = mapping;
     [self activateMappingForcibly:mapping];
 }
@@ -323,14 +341,16 @@ static CVReturn _updateDL(CVDisplayLinkRef displayLink,
 - (void)save {
     NSLog(@"Saving mappings to defaults.");
     NSMutableArray *ary = [[NSMutableArray alloc] initWithCapacity:_mappings.count];
-    for (NJMapping *mapping in _mappings)
+    for (NJMapping *mapping in _mappings) {
         [ary addObject:[mapping serialize]];
+    }
     [NSUserDefaults.standardUserDefaults setObject:ary forKey:@"mappings"];
 }
 
 - (void)postLoadProcess {
-    for (NJMapping *mapping in self.mappings)
+    for (NJMapping *mapping in self.mappings) {
         [mapping postLoadProcess:self.mappings];
+    }
 }
 
 - (void)load {
@@ -338,14 +358,15 @@ static CVReturn _updateDL(CVDisplayLinkRef displayLink,
     NSArray *storedMappings = [NSUserDefaults.standardUserDefaults arrayForKey:@"mappings"];
     NSMutableArray* newMappings = [[NSMutableArray alloc] initWithCapacity:storedMappings.count];
     
-    for (NSDictionary *serialization in storedMappings)
-        [newMappings addObject:
-         [[NJMapping alloc] initWithSerialization:serialization]];
+    for (NSDictionary *serialization in storedMappings) {
+        [newMappings addObject:[[NJMapping alloc] initWithSerialization:serialization]];
+    }
     
     if (newMappings.count) {
         _mappings = newMappings;
-        if (selected >= newMappings.count)
+        if (selected >= newMappings.count) {
             selected = 0;
+        }
         [self activateMapping:_mappings[selected]];
         [self mappingsSet];
     }
@@ -358,15 +379,17 @@ static CVReturn _updateDL(CVDisplayLinkRef displayLink,
 - (void)mergeMapping:(NJMapping *)mapping intoMapping:(NJMapping *)existing {
     [existing mergeEntriesFrom:mapping];
     [self mappingsChanged];
-    if (existing == _currentMapping)
+    if (existing == _currentMapping) {
         [self activateMappingForcibly:mapping];
+    }
 }
 
 - (void)renameMapping:(NJMapping *)mapping to:(NSString *)name {
     mapping.name = name;
     [self mappingsChanged];
-    if (mapping == _currentMapping)
+    if (mapping == _currentMapping) {
         [self activateMappingForcibly:mapping];
+    }
 }
 
 - (void)addMapping:(NJMapping *)mapping {

@@ -11,16 +11,20 @@
 @implementation NSMenu (RepresentedObjectAccessors)
 
 - (NSMenuItem *)itemWithRepresentedObject:(id)object {
-    for (NSMenuItem *item in self.itemArray)
-        if ([item.representedObject isEqual:object])
+    for (NSMenuItem *item in self.itemArray) {
+        if ([item.representedObject isEqual:object]) {
             return item;
+        }
+    }
     return nil;
 }
 
 - (NSMenuItem *)itemWithIdenticalRepresentedObject:(id)object {
-    for (NSMenuItem *item in self.itemArray)
-        if (item.representedObject == object)
+    for (NSMenuItem *item in self.itemArray) {
+        if (item.representedObject == object) {
             return item;
+        }
+    }
     return nil;
 }
 
@@ -29,8 +33,9 @@
 }
 
 - (void)removeLastItem {
-    if (self.numberOfItems)
+    if (self.numberOfItems) {
         [self removeItemAtIndex:self.numberOfItems - 1];
+    }
 }
 
 @end

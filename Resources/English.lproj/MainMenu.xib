@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="22505" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="23727" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23727"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -131,7 +131,7 @@
         <window title="Enjoyable" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Enjoyable" animationBehavior="default" id="450">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="355" y="59" width="664" height="323"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1025"/>
             <value key="minSize" type="size" width="664" height="323"/>
             <view key="contentView" id="453">
                 <rect key="frame" x="0.0" y="0.0" width="664" height="323"/>
@@ -155,7 +155,7 @@
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
-                                                <tableColumn editable="NO" width="220" minWidth="16" maxWidth="1000" id="639" userLabel="Device/Input Name">
+                                                <tableColumn editable="NO" width="191" minWidth="16" maxWidth="1000" id="639" userLabel="Device/Input Name">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" white="0.33333299" alpha="1" colorSpace="calibratedWhite"/>
@@ -175,11 +175,11 @@
                                         </outlineView>
                                     </subviews>
                                 </clipView>
-                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="636">
+                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="636">
                                     <rect key="frame" x="-100" y="-100" width="473" height="15"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="635">
+                                <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="635">
                                     <rect key="frame" x="1" y="1" width="8" height="298"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -216,7 +216,7 @@ Switch back to re-enable input.</string>
                                 <rect key="frame" x="12" y="276" width="406" height="5"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             </box>
-                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="706" userLabel="Input Name">
+                            <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="706" userLabel="Input Name">
                                 <rect key="frame" x="9" y="286" width="412" height="17"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="center" placeholderString="No input selected" usesSingleLineMode="YES" id="707">
@@ -272,7 +272,7 @@ Switch back to re-enable input.</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                 <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="701">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="menu"/>
+                                    <font key="font" metaFont="message"/>
                                     <menu key="menu" title="OtherViews" id="702"/>
                                 </popUpButtonCell>
                             </popUpButton>
@@ -382,7 +382,7 @@ Switch back to re-enable input.</string>
                     </customView>
                 </subviews>
             </view>
-            <toolbar key="toolbar" implicitIdentifier="AC1F5C48-4C16-4C9D-9779-B783AF35E2E1" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="487">
+            <toolbar key="toolbar" implicitIdentifier="AC1F5C48-4C16-4C9D-9779-B783AF35E2E1" allowsUserCustomization="NO" showsBaselineSeparator="NO" displayMode="iconOnly" sizeMode="regular" id="487">
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="4AC66688-76E8-47ED-AC0A-7462220A4019" label="Mapping Selector" paletteLabel="Mapping Selector" image="NSListViewTemplate" title="(default)" autovalidates="NO" id="837" userLabel="Mapping Selector">
                         <nil key="toolTip"/>
@@ -625,11 +625,11 @@ CA
                             </tableView>
                         </subviews>
                     </clipView>
-                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="458">
+                    <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="458">
                         <rect key="frame" x="-100" y="-100" width="366" height="16"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="457">
+                    <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="457">
                         <rect key="frame" x="306" y="1" width="15" height="403"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
@@ -678,9 +678,9 @@ CA
         </customObject>
     </objects>
     <resources>
-        <image name="NSAddTemplate" width="18" height="16"/>
-        <image name="NSListViewTemplate" width="21" height="14"/>
-        <image name="NSRemoveTemplate" width="18" height="4"/>
-        <image name="NSRightFacingTriangleTemplate" width="12" height="16"/>
+        <image name="NSAddTemplate" width="18" height="17"/>
+        <image name="NSListViewTemplate" width="21" height="15"/>
+        <image name="NSRemoveTemplate" width="18" height="5"/>
+        <image name="NSRightFacingTriangleTemplate" width="12" height="17"/>
     </resources>
 </document>

@@ -38,8 +38,9 @@
 
 + (NJOutput *)outputWithSerialization:(NSDictionary *)serialization {
     // Don't crash loading old/bad mappings (but don't load them either).
-    if (![serialization isKindOfClass:NSDictionary.class])
+    if (![serialization isKindOfClass:NSDictionary.class]) {
         return nil;
+    }
     NSString *type = serialization[@"type"];
     for (Class cls in @[NJOutputKeyPress.class,
                         NJOutputMapping.class,
@@ -47,8 +48,9 @@
                         NJOutputMouseButton.class,
                         NJOutputMouseScroll.class
          ]) {
-        if ([type isEqualToString:cls.serializationCode])
+        if ([type isEqualToString:cls.serializationCode]) {
             return [cls outputWithSerialization:serialization];
+        }
     }
     
     return nil;
@@ -75,10 +77,11 @@
 - (void)setRunning:(BOOL)newRunning {
     if (running != newRunning) {
         running = newRunning;
-        if (running)
+        if (running) {
             [self trigger];
-        else
+        } else {
             [self untrigger];
+        }
     }
 }
 

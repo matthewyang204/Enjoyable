@@ -15,7 +15,8 @@
 - (id)initWithName:(NSString *)name
                eid:(NSString *)eid
             parent:(NJInputPathElement *)parent {
-    if ((self = [super init])) {
+    self = [super init];
+    if (self) {
         self.name = name;
         self.parent = parent;
         _eid = eid;
@@ -37,15 +38,16 @@
 }
 
 - (NJInputPathElement *)elementForUID:(NSString *)uid {
-    if ([uid isEqualToString:self.uid])
+    if ([uid isEqualToString:self.uid]) {
         return self;
-    else if (![uid hasPrefix:self.uid])
+    } else if (![uid hasPrefix:self.uid]) {
         return nil;
-    else {
+    } else {
         for (NJInputPathElement *elem in self.children) {
             NJInputPathElement *ret = [elem elementForUID:uid];
-            if (ret)
+            if (ret) {
                 return ret;
+            }
         }
     }
     return nil;

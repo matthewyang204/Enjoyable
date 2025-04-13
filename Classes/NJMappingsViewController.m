@@ -7,7 +7,8 @@
 //
 
 #import "NJMappingsViewController.h"
-
+#import "NSString+FixFilename.h"
+#import "NSFileManager+UniqueNames.h"
 #import "NJMapping.h"
 
 #define PB_ROW @"com.yukkurigames.Enjoyable.MappingRow"
@@ -159,9 +160,8 @@
         } else {
             return YES;
         }
-    } else {
-        return NO;
     }
+    return NO;
 }
 
 - (NSDragOperation)tableView:(NSTableView *)tableView
@@ -193,14 +193,15 @@ forDraggedRowsWithIndexes:(NSIndexSet *)indexSet {
     NSString *filename = [[toSave.name stringByFixingPathComponent]
                           stringByAppendingPathExtension:@"enjoyable"];
     NSURL *dst = [dropDestination URLByAppendingPathComponent:filename];
-    dst = [NSFileManager.defaultManager generateUniqueURLWithBase:dst];
+    NSURL *uniqueURL = [NSFileManager.defaultManager generateUniqueURLWithBase:dst];
+    NSArray *resut = @[];
     NSError *error;
-    if (![toSave writeToURL:dst error:&error]) {
+    if (![toSave writeToURL:uniqueURL error:&error]) {
         [tableView presentError:error];
-        return @[];
     } else {
-        return @[dst.lastPathComponent];
+        resut = @[uniqueURL.lastPathComponent];
     }
+    return resut;
 }
 
 - (BOOL)tableView:(NSTableView *)tableView
@@ -215,9 +216,8 @@ writeRowsWithIndexes:(NSIndexSet *)rowIndexes
         [pboard declareTypes:@[NSFilesPromisePboardType] owner:nil];
         [pboard setPropertyList:@[@"enjoyable"] forType:NSFilesPromisePboardType];
         return YES;
-    } else {
-        return NO;
     }
+    return NO;
 }
 
 - (void)reloadData {

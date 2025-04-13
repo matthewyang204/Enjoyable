@@ -8,7 +8,8 @@
 - (id)initWithCriteria:(NSArray *)criteria
               delegate:(id <NJHIDManagerDelegate>)delegate
 {
-    if ((self = [super init])) {
+    self = [super init];
+    if (self) {
         self.criteria = criteria;
         self.delegate = delegate;
     }
@@ -36,8 +37,9 @@ static void _remove(void *ctx, IOReturn inResult, void *inSender, IOHIDDeviceRef
 }
 
 - (void)start {
-    if (self.running)
+    if (self.running) {
         return;
+    }
     IOHIDManagerRef manager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
     IOHIDManagerSetDeviceMatchingMultiple(manager, (__bridge CFArrayRef)self.criteria);
     IOReturn ret = IOHIDManagerOpen(manager, kIOHIDOptionsTypeNone);
@@ -58,8 +60,9 @@ static void _remove(void *ctx, IOReturn inResult, void *inSender, IOHIDDeviceRef
 }
 
 - (void)stop {
-    if (!self.running)
+    if (!self.running) {
         return;
+    }
     IOHIDManagerUnscheduleFromRunLoop(_manager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     IOHIDManagerClose(_manager, kIOHIDOptionsTypeNone);
     CFRelease(_manager);
@@ -73,10 +76,11 @@ static void _remove(void *ctx, IOReturn inResult, void *inSender, IOHIDDeviceRef
 }
 
 - (void)setRunning:(BOOL)running {
-    if (running)
+    if (running) {
         [self start];
-    else
+    } else {
         [self stop];
+    }
 }
 
 - (NSArray *)criteria {
@@ -84,15 +88,17 @@ static void _remove(void *ctx, IOReturn inResult, void *inSender, IOHIDDeviceRef
 }
 
 - (void)setCriteria:(NSArray *)criteria {
-    if (!criteria)
+    if (!criteria) {
         criteria = @[];
+    }
     if (![criteria isEqualToArray:_criteria]) {
         BOOL running = !!_manager;
         [self stop];
         _criteria = [criteria copy];
-        if (running)
+        if (running) {
             [self start];
-    }    
+        }
+    }
 }
 
 @end

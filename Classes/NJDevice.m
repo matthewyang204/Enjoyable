@@ -32,8 +32,9 @@ static NSArray *InputsForElement(IOHIDDeviceRef device, id parent) {
         
         if (!(type == kIOHIDElementTypeInput_Misc
               || type == kIOHIDElementTypeInput_Axis
-              || type == kIOHIDElementTypeInput_Button))
-             continue;
+              || type == kIOHIDElementTypeInput_Button)) {
+            continue;
+        }
         
         if (max - min == 1
             || usagePage == kHIDPage_Button
@@ -72,7 +73,8 @@ static NSArray *InputsForElement(IOHIDDeviceRef device, id parent) {
 
 - (id)initWithDevice:(IOHIDDeviceRef)dev {
     NSString *name = (__bridge NSString *)IOHIDDeviceGetProperty(dev, CFSTR(kIOHIDProductKey));
-    if ((self = [super initWithName:name eid:nil parent:nil])) {
+    self = [super initWithName:name eid:nil parent:nil];
+    if (self) {
         self.device = dev;
         _vendorId = [(__bridge NSNumber *)IOHIDDeviceGetProperty(dev, CFSTR(kIOHIDVendorIDKey)) intValue];
         _productId = [(__bridge NSNumber *)IOHIDDeviceGetProperty(dev, CFSTR(kIOHIDProductIDKey)) intValue];
@@ -96,9 +98,11 @@ static NSArray *InputsForElement(IOHIDDeviceRef device, id parent) {
 }
 
 - (NJInput *)findInputByCookie:(IOHIDElementCookie)cookie {
-    for (NJInput *child in self.children)
-        if (child.cookie == cookie)
+    for (NJInput *child in self.children) {
+        if (child.cookie == cookie) {
             return child;
+        }
+    }
     return nil;
 }
 

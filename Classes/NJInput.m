@@ -15,9 +15,11 @@
             parent:(NJInputPathElement *)parent
 {
     NSString *elementName = (__bridge NSString *)IOHIDElementGetName(element);
-    if (elementName.length)
+    if (elementName.length) {
         name = [name stringByAppendingFormat:@"- %@", elementName];
-    if ((self = [super initWithName:name eid:eid parent:parent])) {
+    }
+    self = [super initWithName:name eid:eid parent:parent];
+    if (self) {
         _cookie = IOHIDElementGetCookie(element);
     }
     return self;

@@ -7,7 +7,7 @@
 //
 
 #import "NJDeviceViewController.h"
-
+#import "NSOutlineView+ItemAccessors.h"
 #import "NJInputPathElement.h"
 
 @implementation NJDeviceViewController {
@@ -15,7 +15,8 @@
 }
 
 - (id)init {
-    if ((self = [super init])) {
+    self = [super init];
+    if (self) {
         NSArray *expanded = [NSUserDefaults.standardUserDefaults objectForKey:@"expanded rows"];
         if (![expanded isKindOfClass:[NSArray class]]) {
             expanded = [NSArray array];
@@ -38,8 +39,9 @@
 }
 
 - (void)reexpandAll {
-    for (NSString *uid in [_expanded copy])
+    for (NSString *uid in [_expanded copy]) {
         [self expandRecursiveByUID:uid];
+    }
     if (self.inputsTree.selectedRow == -1) {
         NSString *selectedUid = [NSUserDefaults.standardUserDefaults objectForKey:@"selected input"];
         id item = [self.delegate deviceViewController:self elementForUID:selectedUid];
@@ -90,11 +92,12 @@
 
 - (NSInteger)outlineView:(NSOutlineView *)outlineView
   numberOfChildrenOfItem:(NJInputPathElement *)item {
-    if (item)
+    if (item) {
         return item.children.count;
-    else
+    } else {
         return [self.delegate numberOfDevicesInDeviceList:self];
-
+    }
+    return 0;
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView
@@ -105,10 +108,12 @@
 - (id)outlineView:(NSOutlineView *)outlineView
             child:(NSInteger)index
            ofItem:(NJInputPathElement *)item {
-    if (item)
+    if (item) {
         return item.children[index];
-    else
+    } else {
         return [self.delegate deviceViewController:self deviceForIndex:index];
+    }
+    return 0;
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView
@@ -123,15 +128,16 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
     if (item) {
         [NSUserDefaults.standardUserDefaults setObject:item.uid
                                                 forKey:@"selected input"];
-        if (!item.children)
+        if (!item.children) {
             [self.delegate deviceViewController:self
                                didSelectHandler:item];
-        else if (!item.parent)
+        } else if (!item.parent) {
             [self.delegate deviceViewController:self
-                               didSelectDevice:item];
-        else
+                                didSelectDevice:item];
+        } else {
             [self.delegate deviceViewController:self
                                 didSelectBranch:item];
+        }
     } else {
         [self.delegate deviceViewControllerDidSelectNothing:self];
     }

@@ -18,8 +18,9 @@
     if (s_doubleClickThreshold == 0) {
         s_doubleClickThreshold = [[NSUserDefaults.standardUserDefaults
                                  objectForKey:@"com.apple.mouse.doubleClickThreshold"] floatValue];
-        if (s_doubleClickThreshold <= 0)
+        if (s_doubleClickThreshold <= 0) {
             s_doubleClickThreshold = 1.0;
+        }
     }
     return s_doubleClickThreshold;
 }
@@ -54,10 +55,11 @@
                                                _button);
 
     if (clickCount >= 3 || [upTime compare:[NSDate date]] == NSOrderedAscending
-        || !CGPointEqualToPoint(mouseLoc, clickPosition))
+        || !CGPointEqualToPoint(mouseLoc, clickPosition)) {
         clickCount = 1;
-    else
+    } else {
         ++clickCount;
+    }
     CGEventSetIntegerValueField(click, kCGMouseEventClickState, clickCount);
     CGEventPost(kCGHIDEventTap, click);
     CFRelease(click);

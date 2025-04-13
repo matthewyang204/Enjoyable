@@ -16,7 +16,8 @@
 @implementation NJMappingMenuController
 
 - (id)init {
-    if ((self = [super init])) {
+    self = [super init];
+    if (self) {
         NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
         [center addObserver:self
                    selector:@selector(mappingsListDidChange:)
@@ -58,8 +59,9 @@
     while (self.menu.numberOfItems > self.firstMappingIndex
            && (toRemove = [self.menu itemAtIndex:self.firstMappingIndex])
            && ([toRemove.representedObject isKindOfClass:NJMapping.class]
-               || toRemove.representedObject == self.class))
-        [self.menu removeItemAtIndex:self.firstMappingIndex];    
+               || toRemove.representedObject == self.class)) {
+        [self.menu removeItemAtIndex:self.firstMappingIndex];
+    }
     
     int added = 0;
     NSUInteger index = self.firstMappingIndex;
@@ -94,9 +96,11 @@
 
 - (void)mappingDidChange:(NSNotification *)note {
     NJMapping *mapping = note.userInfo[NJMappingKey];
-    for (NSMenuItem *item in self.menu.itemArray)
-        if ([item.representedObject isKindOfClass:NJMapping.class])
+    for (NSMenuItem *item in self.menu.itemArray) {
+        if ([item.representedObject isKindOfClass:NJMapping.class]) {
             item.state = mapping == item.representedObject;
+        }
+    }
 }
 
 - (void)eventSimulationStarted:(NSNotification *)note {

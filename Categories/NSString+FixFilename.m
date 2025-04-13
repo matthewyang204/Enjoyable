@@ -24,11 +24,13 @@
     NSArray *parts = [self componentsSeparatedByCharactersInSet:invalid];
     NSString *name = [parts componentsJoinedByString:@"_"];
     name = [name stringByTrimmingCharactersInSet:whitespace];
-    if (!name.length)
+    if (!name.length) {
         return @"_";
+    }
     unichar first = [name characterAtIndex:0];
-    if (first == '.' || first == '-')
+    if (first == '.' || first == '-') {
         name = [@"_" stringByAppendingString:name];
+    }
     return name;
 }
 
